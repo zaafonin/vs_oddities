@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "io.github.zaafonin.vs_oddities.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [
+  ],
+  "mixins": [
+    "treechop.MixinFellTreeResult",
+    "dispenser.MixinDispenseItemBehavior"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
