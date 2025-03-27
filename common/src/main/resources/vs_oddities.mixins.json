@@ -7,7 +7,8 @@
   ],
   "mixins": [
     "treechop.MixinFellTreeResult",
-    "dispenser.MixinDispenseItemBehavior"
+    "dispenser.MixinDispenseItemBehavior",
+    "commands.MixinVSCommands"
   ],
   "injectors": {
     "defaultRequire": 1
