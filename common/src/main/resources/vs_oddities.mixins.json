@@ -7,7 +7,10 @@
   ],
   "mixins": [
     "treechop.MixinFellTreeResult",
-    "dispenser.MixinDispenseItemBehavior"
+    "dispenser.MixinDispenseItemBehavior",
+    "commands.MixinVSCommands",
+    "biomes.MixinShipObjectServerWorld",
+    "biomes.MixinChunkAccess"
   ],
   "injectors": {
     "defaultRequire": 1
