@@ -10,7 +10,9 @@
     "dispenser.MixinDispenseItemBehavior",
     "commands.MixinVSCommands",
     "biomes.MixinShipObjectServerWorld",
-    "biomes.MixinChunkAccess"
+    "biomes.MixinChunkAccess",
+    "light.IMixinRenderChunkRegion",
+    "light.MixinBlockAndTintGetter"
   ],
   "injectors": {
     "defaultRequire": 1
