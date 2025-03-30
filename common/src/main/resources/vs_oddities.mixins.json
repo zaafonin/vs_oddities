@@ -12,7 +12,10 @@
     "biomes.MixinShipObjectServerWorld",
     "biomes.MixinChunkAccess",
     "light.IMixinRenderChunkRegion",
-    "light.MixinBlockAndTintGetter"
+    "light.MixinBlockAndTintGetter",
+    "sculk.MixinVibrationSystem",
+    "sculk.MixinGameEventDispatcher",
+    "sculk.MixinEuclideanGameEventListenerRegistry"
   ],
   "injectors": {
     "defaultRequire": 1

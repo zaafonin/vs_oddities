@@ -29,4 +29,7 @@ dependencies {
 
     // HT's Treechop
     modCompileOnly("maven.modrinth:treechop:tIdTnzkf")
+
+    // Echo Chest
+    modCompileOnly("maven.modrinth:echo-chest:ppi4nxw2")
 }
