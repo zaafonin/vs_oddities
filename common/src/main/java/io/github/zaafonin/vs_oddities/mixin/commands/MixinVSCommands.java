@@ -6,50 +6,22 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import io.github.zaafonin.vs_oddities.ship.ThrustApplier;
-import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.commands.FillCommand;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DispenserBlock;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3d;
-import org.joml.Vector3dc;
-import org.joml.Vector3i;
-import org.joml.primitives.AABBi;
-import org.joml.primitives.AABBic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.world.ServerShipWorld;
-import org.valkyrienskies.core.api.world.ShipWorld;
-import org.valkyrienskies.core.apigame.VSCore;
-import org.valkyrienskies.core.impl.game.ships.ShipData;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.command.ShipArgument;
 import org.valkyrienskies.mod.common.command.VSCommands;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 import org.valkyrienskies.mod.mixinducks.feature.command.VSCommandSource;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 
 import java.util.*;
-
-import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
-import static com.mojang.brigadier.builder.RequiredArgumentBuilder.argument;
 
 @Mixin(VSCommands.class)
 public abstract class MixinVSCommands {

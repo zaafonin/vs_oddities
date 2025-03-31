@@ -1,6 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.dispenser;
 
-import io.github.zaafonin.vs_oddities.ship.ThrustApplier;
+import io.github.zaafonin.vs_oddities.ship.ThrustInducer;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -47,7 +47,7 @@ public abstract class MixinDispenseItemBehavior {
                 Vector3dc JOMLposInShip = JOMLpos.sub(ship.getTransform().getPositionInShip());
                 Vector3dc JOMLrecoil = VectorConversionsMCKt.toJOMLD(direction.getNormal()).mul(-recoilFactor);
 
-                final ThrustApplier applier = ThrustApplier.getOrCreate(ship);
+                final ThrustInducer applier = ThrustInducer.getOrCreate(ship);
                 if (applier != null && JOMLrecoil.isFinite()) {
                     applier.applyPulse(
                             JOMLrecoil,

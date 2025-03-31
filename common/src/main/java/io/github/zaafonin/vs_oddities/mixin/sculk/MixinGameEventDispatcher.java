@@ -60,6 +60,7 @@ public abstract class MixinGameEventDispatcher {
         ).forEach(
         ship -> {
             AABBic temp = ship.getShipAABB();
+            if (temp == null) return;
             AABBd shipAABB = new AABBd(
                     temp.minX(), temp.minY(), temp.minZ(),
                     temp.maxX(), temp.maxY(), temp.maxZ()

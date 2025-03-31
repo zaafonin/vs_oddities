@@ -15,7 +15,8 @@
     "light.MixinBlockAndTintGetter",
     "sculk.MixinVibrationSystem",
     "sculk.MixinGameEventDispatcher",
-    "sculk.MixinEuclideanGameEventListenerRegistry"
+    "sculk.MixinEuclideanGameEventListenerRegistry",
+    "snoop.MixinLevelChunk"
   ],
   "injectors": {
     "defaultRequire": 1

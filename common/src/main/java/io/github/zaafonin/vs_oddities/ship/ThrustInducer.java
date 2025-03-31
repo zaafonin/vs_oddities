@@ -1,22 +1,21 @@
 package io.github.zaafonin.vs_oddities.ship;
 
-import ht.treechop.server.Server;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Position;
-import net.minecraft.world.level.Level;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
-import org.valkyrienskies.core.api.world.ShipWorld;
-import org.valkyrienskies.core.apigame.world.properties.DimensionIdKt;
-import org.valkyrienskies.core.util.VSCoreUtilKt;
-import org.valkyrienskies.mod.util.McMathUtilKt;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class ThrustApplier implements ShipForcesInducer {
+@JsonAutoDetect(
+        fieldVisibility = JsonAutoDetect.Visibility.ANY,
+        getterVisibility = JsonAutoDetect.Visibility.NONE,
+        isGetterVisibility = JsonAutoDetect.Visibility.NONE,
+        setterVisibility = JsonAutoDetect.Visibility.NONE
+)
+public class ThrustInducer implements ShipForcesInducer {
     // Structs
     public class Pulse {
         public Vector3dc force;
@@ -57,11 +56,11 @@ public class ThrustApplier implements ShipForcesInducer {
     }
 
     // Boilerplate as seen in Tournament, Kontraption, etc.
-    public static ThrustApplier getOrCreate(ServerShip ship) {
-        ThrustApplier result = ship.getAttachment(ThrustApplier.class);
+    public static ThrustInducer getOrCreate(ServerShip ship) {
+        ThrustInducer result = ship.getAttachment(ThrustInducer.class);
         if (result == null) {
-            result = new ThrustApplier();
-            ship.saveAttachment(ThrustApplier.class, result);
+            result = new ThrustInducer();
+            ship.saveAttachment(ThrustInducer.class, result);
         }
         return result;
     }

@@ -57,7 +57,7 @@ dependencies {
     modImplementation("maven.modrinth:treechop:0.19.0")
 
     // Echo Chest
-    modImplementation("maven.modrinth:echo-chest:aQcerSRS")
+    //modImplementation("maven.modrinth:echo-chest:aQcerSRS")
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':common', configuration: 'transformProductionForge')) { transitive false }
