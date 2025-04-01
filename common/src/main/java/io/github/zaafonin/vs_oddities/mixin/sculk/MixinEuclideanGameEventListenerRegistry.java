@@ -33,7 +33,7 @@ public abstract class MixinEuclideanGameEventListenerRegistry {
             if (listenShip != null) listenPos = VSGameUtilsKt.toWorldCoordinates(listenShip, listenPos);
             double d = listenPos.distanceToSqr(sourcePos);
             int i = gameEventListener.getListenerRadius() * gameEventListener.getListenerRadius();
-            cir.setReturnValue(d > (double)i ? Optional.empty() : optional);
+            cir.setReturnValue(d > (double) i ? Optional.empty() : optional);
         }
         cir.cancel();
     }

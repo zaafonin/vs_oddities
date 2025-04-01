@@ -4,6 +4,7 @@ import io.github.zaafonin.vs_oddities.ship.ThrustInducer;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -20,6 +21,9 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 @Mixin(
         targets = {
+                // We need to mixin DispenseItemBehavior.execute, but the method is overridden in various classes, including anonymous ones.
+                // Manually specify every class we need. We're good because we're injecting into the same method.
+
                 "net.minecraft.core.dispenser.DispenseItemBehavior$14", // Firework rocket
                 "net.minecraft.core.dispenser.DispenseItemBehavior$15",  // Fire charge
                 "net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior"  // Arrows, eggs, snowballs, etc.
@@ -27,35 +31,29 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 )
 public abstract class MixinDispenseItemBehavior {
     @Inject(method = "execute(Lnet/minecraft/core/BlockSource;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/ItemStack;", at = @At("HEAD"))
-    private void addRecoil(BlockSource blockSource, ItemStack itemStack, CallbackInfoReturnable<ItemStack> ci)
-    {
-        Level level = blockSource.getLevel();
+    private void addRecoil(BlockSource blockSource, ItemStack itemStack, CallbackInfoReturnable<ItemStack> ci) {
+        ServerLevel level = blockSource.getLevel();
         Position position = DispenserBlock.getDispensePosition(blockSource);
-        Direction direction = (Direction)blockSource.getBlockState().getValue(DispenserBlock.FACING);
+        Direction direction = blockSource.getBlockState().getValue(DispenserBlock.FACING);
 
-        ServerShip ship = (ServerShip)VSGameUtilsKt.getShipObjectManagingPos(level, VectorConversionsMCKt.toJOML(position));
-        if (ship != null) {
-            double recoilFactor = 0.5e6; // Relatively small recoil for projectiles
-            // TODO: This should be data!
-            if (itemStack.getItem() == Items.FIREWORK_ROCKET)
-                recoilFactor = 2e6;
-            else if (itemStack.getItem() == Items.FIRE_CHARGE)
-                recoilFactor = 5e6;
+        ServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, VectorConversionsMCKt.toJOML(position));
+        if (ship == null) return; // No ship, no recoil.
 
-            if (recoilFactor != 0) {
-                Vector3d JOMLpos = new Vector3d(position.x(), position.y(), position.z());
-                Vector3dc JOMLposInShip = JOMLpos.sub(ship.getTransform().getPositionInShip());
-                Vector3dc JOMLrecoil = VectorConversionsMCKt.toJOMLD(direction.getNormal()).mul(-recoilFactor);
+        double recoilFactor = 0.5e6; // Small but noticeable recoil for projectiles such as arrows and snowballs.
+        // TODO: This should be data!
+        if (itemStack.getItem() == Items.FIREWORK_ROCKET)
+            recoilFactor = 2e6;
+        else if (itemStack.getItem() == Items.FIRE_CHARGE)
+            recoilFactor = 5e6;
 
-                final ThrustInducer applier = ThrustInducer.getOrCreate(ship);
-                if (applier != null && JOMLrecoil.isFinite()) {
-                    applier.applyPulse(
-                            JOMLrecoil,
-                            JOMLposInShip,
-                            1
-                    );
-                }
-            }
-        }
+        if (recoilFactor == 0) return; // Don't apply zero forces.
+
+        Vector3d JOMLposInShip = VectorConversionsMCKt.toJOML(position).sub(ship.getTransform().getPositionInShip());
+        Vector3dc JOMLrecoil = VectorConversionsMCKt.toJOMLD(direction.getNormal()).mul(-recoilFactor);
+
+        ThrustInducer applier = ThrustInducer.getOrCreate(ship);
+        if (!JOMLrecoil.isFinite()) return; // Something went really wrong with our calculations.
+
+        applier.applyPulse(JOMLrecoil, JOMLposInShip, 1);
     }
 }

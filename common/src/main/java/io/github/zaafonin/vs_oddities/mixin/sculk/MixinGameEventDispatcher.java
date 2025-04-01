@@ -55,55 +55,55 @@ public abstract class MixinGameEventDispatcher {
                 blockPos.getX() + i, blockPos.getY() + i, blockPos.getZ() + i
         );
         VSGameUtilsKt.getAllShips(level).stream().filter(
-        // Filtering out sourceShip because same-ship events are handled by vanilla.
-        ship -> ship != sourceShip && ship.getWorldAABB().intersectsSphere(finalVec.x, finalVec.y, finalVec.z, Math.pow(i, 2))
+                // Filtering out sourceShip because same-ship events are handled by vanilla.
+                ship -> ship != sourceShip && ship.getWorldAABB().intersectsSphere(finalVec.x, finalVec.y, finalVec.z, Math.pow(i, 2))
         ).forEach(
-        ship -> {
-            AABBic temp = ship.getShipAABB();
-            if (temp == null) return;
-            AABBd shipAABB = new AABBd(
-                    temp.minX(), temp.minY(), temp.minZ(),
-                    temp.maxX(), temp.maxY(), temp.maxZ()
-            );
-            // When dealing with ships in a loop, always use .transform(..., dest) instead of .transform(...)
-            // Otherwise you'll modify your out-of-loop AABBs and stuff like that!
-            AABBd intersection = shipAABB.intersection(sourceAABB.transform(ship.getWorldToShip(), new AABBd()), new AABBd());
-            BlockPos minB = BlockPos.containing(intersection.minX, intersection.minY, intersection.minZ);
-            BlockPos maxB = BlockPos.containing(intersection.maxX, intersection.maxY, intersection.maxZ);
-            int j = SectionPos.blockToSectionCoord(minB.getX());
-            int k = SectionPos.blockToSectionCoord(minB.getY());
-            int l = SectionPos.blockToSectionCoord(minB.getZ());
-            int m = SectionPos.blockToSectionCoord(maxB.getX());
-            int n = SectionPos.blockToSectionCoord(maxB.getY());
-            int o = SectionPos.blockToSectionCoord(maxB.getZ());
+                ship -> {
+                    AABBic temp = ship.getShipAABB();
+                    if (temp == null) return;
+                    AABBd shipAABB = new AABBd(
+                            temp.minX(), temp.minY(), temp.minZ(),
+                            temp.maxX(), temp.maxY(), temp.maxZ()
+                    );
+                    // When dealing with ships in a loop, always use .transform(..., dest) instead of .transform(...)
+                    // Otherwise you'll modify your out-of-loop AABBs and stuff like that!
+                    AABBd intersection = shipAABB.intersection(sourceAABB.transform(ship.getWorldToShip(), new AABBd()), new AABBd());
+                    BlockPos minB = BlockPos.containing(intersection.minX, intersection.minY, intersection.minZ);
+                    BlockPos maxB = BlockPos.containing(intersection.maxX, intersection.maxY, intersection.maxZ);
+                    int j = SectionPos.blockToSectionCoord(minB.getX());
+                    int k = SectionPos.blockToSectionCoord(minB.getY());
+                    int l = SectionPos.blockToSectionCoord(minB.getZ());
+                    int m = SectionPos.blockToSectionCoord(maxB.getX());
+                    int n = SectionPos.blockToSectionCoord(maxB.getY());
+                    int o = SectionPos.blockToSectionCoord(maxB.getZ());
 
-            // Copy-paste of original code, except we iterate through ship chunks
+                    // Copy-paste of original code, except we iterate through ship chunks
 
-            List<GameEvent.ListenerInfo> list = new ArrayList();
-            GameEventListenerRegistry.ListenerVisitor listenerVisitor = (gameEventListener, vec32) -> {
-                if (gameEventListener.getDeliveryMode() == GameEventListener.DeliveryMode.BY_DISTANCE) {
-                    list.add(new GameEvent.ListenerInfo(gameEvent, finalVec, context, gameEventListener, vec32));
-                } else {
-                    gameEventListener.handleGameEvent(this.level, gameEvent, context, finalVec);
-                }
+                    List<GameEvent.ListenerInfo> list = new ArrayList();
+                    GameEventListenerRegistry.ListenerVisitor listenerVisitor = (gameEventListener, vec32) -> {
+                        if (gameEventListener.getDeliveryMode() == GameEventListener.DeliveryMode.BY_DISTANCE) {
+                            list.add(new GameEvent.ListenerInfo(gameEvent, finalVec, context, gameEventListener, vec32));
+                        } else {
+                            gameEventListener.handleGameEvent(this.level, gameEvent, context, finalVec);
+                        }
 
-            };
-            boolean bl = false;
+                    };
+                    boolean bl = false;
 
-            for(int p = j; p <= m; ++p) {
-                for(int q = l; q <= o; ++q) {
-                    ChunkAccess chunkAccess = this.level.getChunkSource().getChunkNow(p, q);
-                    if (chunkAccess != null) {
-                        for(int r = k; r <= n; ++r) {
-                            bl |= chunkAccess.getListenerRegistry(r).visitInRangeListeners(gameEvent, finalVec, context, listenerVisitor);
+                    for (int p = j; p <= m; ++p) {
+                        for (int q = l; q <= o; ++q) {
+                            ChunkAccess chunkAccess = this.level.getChunkSource().getChunkNow(p, q);
+                            if (chunkAccess != null) {
+                                for (int r = k; r <= n; ++r) {
+                                    bl |= chunkAccess.getListenerRegistry(r).visitInRangeListeners(gameEvent, finalVec, context, listenerVisitor);
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            if (!list.isEmpty()) {
-                this.handleGameEventMessagesInQueue(list);
-            }
-        });
+                    if (!list.isEmpty()) {
+                        this.handleGameEventMessagesInQueue(list);
+                    }
+                });
     }
 }

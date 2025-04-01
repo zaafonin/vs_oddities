@@ -48,14 +48,17 @@ public class LiftDragInducer implements ShipForcesInducer {
     }
 
     public void onSetBlockState(ServerLevel level, BlockPos pos, BlockState oldState, BlockState newState) {
+        // Modify easy lift (invariant upward force, PID-regulated in the future)
         double deltaLift = 0;
         deltaLift -= Objects.requireNonNullElse(liftValues.get(oldState.getBlock()), 0.0);
         deltaLift += Objects.requireNonNullElse(liftValues.get(newState.getBlock()), 0.0);
         blockEasyLift += deltaLift;
         // Eye candy
         if (deltaLift > 0) {
-            level.sendParticles(ParticleTypes.WAX_OFF, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3, 0.5, 0.5, 0.5, 0.0);
+            level.sendParticles(ParticleTypes.WAX_OFF, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 5, 0.5, 0.5, 0.5, 0.0);
         }
+        // Modify positional lift (positional upward force, altitude-dependent in the future)
+        // TODO: Implement positional lift similarly to Pulse from ThrustInducer.
     }
 
     public static LiftDragInducer getOrCreate(ServerShip ship) {

@@ -26,29 +26,29 @@ import java.util.*;
 @Mixin(VSCommands.class)
 public abstract class MixinVSCommands {
     @Shadow
-    abstract LiteralArgumentBuilder<VSCommandSource> literal(String name);
+    protected abstract LiteralArgumentBuilder<VSCommandSource> literal(String name);
 
     @Shadow
-    abstract <T> RequiredArgumentBuilder argument(String name, ArgumentType<T> type);
+    protected abstract <T> RequiredArgumentBuilder argument(String name, ArgumentType<T> type);
 
     @Inject(method = "registerServerCommands", at = @At("TAIL"), remap = false)
     private void modifyvs(@NotNull CommandDispatcher<CommandSourceStack> dispatcher, CallbackInfo ci) {
-        System.out.println("COMMAND PATH " + dispatcher.getPath(dispatcher.getRoot()));
+        // TODO: This used to work a few days ago. Not first priority but it would be good to get it functional.
         dispatcher.register(
                 literal("vs").then(literal("break").then(argument("ships", ShipArgument.Companion.ships()).then(argument("drop", BoolArgumentType.bool())).executes(ctx ->
-                        {
-                            MinecraftServer server = ((CommandContext<CommandSourceStack>)ctx).getSource().getServer();
-                            Set<ServerShip> ships = ShipArgument.Companion.getShips(ctx, "ships");
-                            Boolean drop = BoolArgumentType.getBool(ctx, "drop");
-                            ships.forEach(ship ->
-                                    {
-                                        ServerLevel level = OddUtils.getLevelOfShip(server, ship);
-                                        OddUtils.streamShipBlocks(server, ship).forEach(
-                                                pos -> level.destroyBlock(pos, drop)
-                                        );
-                                    }
-                            );
-                            return 0;
-                        }))));
+                {
+                    MinecraftServer server = ((CommandContext<CommandSourceStack>) ctx).getSource().getServer();
+                    Set<ServerShip> ships = ShipArgument.Companion.getShips(ctx, "ships");
+                    boolean drop = BoolArgumentType.getBool(ctx, "drop");
+                    ships.forEach(ship ->
+                            {
+                                ServerLevel level = OddUtils.getLevelOfShip(server, ship);
+                                OddUtils.streamShipBlocks(level, ship).forEach(
+                                        pos -> level.destroyBlock(pos, drop)
+                                );
+                            }
+                    );
+                    return 0;
+                }))));
     }
 }

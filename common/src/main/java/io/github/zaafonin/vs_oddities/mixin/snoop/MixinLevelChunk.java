@@ -22,7 +22,8 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 @Mixin(LevelChunk.class)
 public abstract class MixinLevelChunk {
-    @Shadow @Final
+    @Shadow
+    @Final
     Level level;
 
     @Shadow
@@ -30,8 +31,7 @@ public abstract class MixinLevelChunk {
 
     @Inject(method = "setBlockState", at = @At("HEAD")) // need to fetch the old block state
     private void trackOddProperties(BlockPos blockPos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> ci) {
-        if (!(level instanceof ServerLevel)) return;
-        ServerLevel serverLevel = (ServerLevel)level;
+        if (!(level instanceof ServerLevel serverLevel)) return;
 
         ServerShip ship = VSGameUtilsKt.getShipManagingPos(serverLevel, blockPos);
         if (ship == null) return;

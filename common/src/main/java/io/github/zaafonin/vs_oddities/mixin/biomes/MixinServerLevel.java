@@ -23,7 +23,7 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 @Mixin(ServerLevel.class)
 public abstract class MixinServerLevel {
     @Redirect(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"))
-    private Holder<Biome> adjustForShipPosInWorld(ServerLevel instance, BlockPos blockPos) {
+    private Holder<Biome> adjustForWorldPosition(ServerLevel instance, BlockPos blockPos) {
         ServerLevel level = (ServerLevel)(Object)this;
         Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
         if (ship != null) {

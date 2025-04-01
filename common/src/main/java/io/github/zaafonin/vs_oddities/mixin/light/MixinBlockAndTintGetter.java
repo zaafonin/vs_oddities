@@ -1,6 +1,7 @@
 package io.github.zaafonin.vs_oddities.mixin.light;
 
 import io.github.zaafonin.vs_oddities.ship.OddAttachment;
+import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.QuartPos;
@@ -28,26 +29,30 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 import org.valkyrienskies.mod.mixin.accessors.client.render.chunk.RenderChunkAccessor;
 
 @Mixin(BlockAndTintGetter.class)
-public abstract interface MixinBlockAndTintGetter {
+public interface MixinBlockAndTintGetter {
     @Shadow
-    abstract LevelLightEngine getLightEngine();
+    LevelLightEngine getLightEngine();
 
     @Inject(method = "getBrightness", at = @At("HEAD"), cancellable = true)
-    default void getBrightness(LightLayer lightType, BlockPos blockPos, CallbackInfoReturnable<Integer> ci) {
+    default void applyWorldBrightness(LightLayer lightType, BlockPos blockPos, CallbackInfoReturnable<Integer> ci) {
         Level level = getLevel();
         if (level != null) {
             Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
             if (ship != null) {
                 Vector3d vPosWorld = ship.getShipToWorld().transformPosition(VectorConversionsMCKt.toJOMLD(blockPos));
-                BlockPos blockPosWorld = new BlockPos((int) (vPosWorld.x + 0.5), (int) (vPosWorld.y + 0.5), (int) (vPosWorld.z + 0.5));
+                // BlockPos.containing does not work here.
+                BlockPos blockPosWorld = OddUtils.toNearestBlock(vPosWorld);
                 switch (lightType) {
                     case BLOCK:
-                        ci.setReturnValue(
-                                (this.getLightEngine().getLayerListener(lightType).getLightValue(blockPos)
-                                        + this.getLightEngine().getLayerListener(lightType).getLightValue(blockPosWorld) % 16)
+                        // Block lighting: combine on-ship light with in-world.
+                        ci.setReturnValue(Math.min(
+                                this.getLightEngine().getLayerListener(lightType).getLightValue(blockPos)
+                                + this.getLightEngine().getLayerListener(lightType).getLightValue(blockPosWorld),
+                                15)
                         );
                         break;
                     case SKY:
+                        // Sky lighting: lower lighting indicates sky occlusion. Choose that one.
                         ci.setReturnValue(Math.min(
                                 this.getLightEngine().getLayerListener(lightType).getLightValue(blockPos),
                                 this.getLightEngine().getLayerListener(lightType).getLightValue(blockPosWorld)
@@ -59,25 +64,13 @@ public abstract interface MixinBlockAndTintGetter {
         }
     }
 
-    /*@Inject(method = "getRawBrightness", at = @At("HEAD"), cancellable = true)
-    default void getRawBrightness(BlockPos blockPos, int amount, CallbackInfoReturnable<Integer> ci) {
-        Level level = getLevel();
-        if (level != null) {
-            Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
-            if (ship != null) {
-                ci.setReturnValue(0);
-                ci.cancel();
-            }
-        }
-    }*/
-
     // Cursed.
     private Level getLevel() {
         Level level = null;
         if (this instanceof Level) {
-            level = (Level)this;
+            level = (Level) this;
         } else if (this instanceof RenderChunkRegion) {
-            level = ((IMixinRenderChunkRegion)this).getLevel();
+            level = ((IMixinRenderChunkRegion) this).getLevel();
         }
         return level;
     }

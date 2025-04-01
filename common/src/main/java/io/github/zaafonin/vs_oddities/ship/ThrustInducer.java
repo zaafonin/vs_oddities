@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
         setterVisibility = JsonAutoDetect.Visibility.NONE
 )
 public class ThrustInducer implements ShipForcesInducer {
-    // Structs
+    // region Structs
     public class Pulse {
         public Vector3dc force;
         public Vector3dc pos;
@@ -27,13 +27,16 @@ public class ThrustInducer implements ShipForcesInducer {
             this.pos = shipRelativePos;
             this.ticks = ticks;
         }
+
         public Pulse(Vector3dc force, Vector3dc shipRelativePos) {
             this(force, shipRelativePos, 1);
         }
-    };
+    }
+    // endregion
 
-    // Stored data
+    // region Stored data
     private final CopyOnWriteArrayList<Pulse> pulses = new CopyOnWriteArrayList<>();
+    // endregion
 
     // VS2 necessary
     @Override
@@ -47,13 +50,15 @@ public class ThrustInducer implements ShipForcesInducer {
         pulses.removeIf(pulse -> pulse.ticks <= 0);
     }
 
-    // Mod interface
+    // region External interface
     public void applyPulse(Pulse pulse) {
         pulses.add(pulse);
     }
+
     public void applyPulse(Vector3dc force, Vector3dc pos, int ticks) {
         pulses.add(new Pulse(force, pos, ticks));
     }
+    // endregion
 
     // Boilerplate as seen in Tournament, Kontraption, etc.
     public static ThrustInducer getOrCreate(ServerShip ship) {

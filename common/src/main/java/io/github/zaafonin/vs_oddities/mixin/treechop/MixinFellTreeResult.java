@@ -19,13 +19,18 @@ import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.assembly.ShipAssemblyKt;
+
 import java.util.Collection;
 
 @Pseudo
 @Mixin(FellTreeResult.class)
 public abstract class MixinFellTreeResult {
-    @Shadow(remap = false) @Final private Level level;
-    @Shadow(remap = false) @Final private FellDataImpl fellData;
+    @Shadow(remap = false)
+    @Final
+    private Level level;
+    @Shadow(remap = false)
+    @Final
+    private FellDataImpl fellData;
 
     // This could have been implemented via HT's FellTreeEvent. However, a mixin is loader-agnostic in this case.
     @Inject(
@@ -48,14 +53,19 @@ public abstract class MixinFellTreeResult {
             tree.streamLogs()
                     .filter(pos -> !pos.equals(targetPos) && !player.blockActionRestricted(level, pos, gameType))
                     .filter(pos -> !(level.getBlockState(pos).getBlock() instanceof ChoppedLogBlock)) // Heavily suboptimal.
-                    .forEach(pos -> { blocks.add(pos.getX(), pos.getY(), pos.getZ()); });
+                    .forEach(pos -> {
+                        blocks.add(pos.getX(), pos.getY(), pos.getZ());
+                    });
             tree.streamLeaves()
                     .filter(pos -> !player.blockActionRestricted(level, pos, gameType))
-                    .forEach(pos -> { blocks.add(pos.getX(), pos.getY(), pos.getZ()); });
+                    .forEach(pos -> {
+                        blocks.add(pos.getX(), pos.getY(), pos.getZ());
+                    });
 
             ShipAssemblyKt.createNewShipWithBlocks(targetPos, blocks, (ServerLevel) level);
             ci.cancel();
         } else {
+            // TODO: Make a config already! Here will be the "tree on ship" counterpart.
         }
     }
 }

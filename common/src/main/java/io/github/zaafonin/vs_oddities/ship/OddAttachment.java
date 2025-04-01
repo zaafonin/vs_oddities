@@ -7,6 +7,7 @@ import org.joml.Vector2i;
 import org.joml.Vector2ic;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
+import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 @JsonAutoDetect(
@@ -24,9 +25,11 @@ public class OddAttachment {
     public String getOriginalDim() {
         return origDim;
     }
+
     public BlockPos getOriginalBlockPos() {
         return VectorConversionsMCKt.toBlockPos(origWorldPos);
     }
+
     public ChunkPos getOriginalChunkPos() {
         return VectorConversionsMCKt.toMinecraft(origChunkPos);
     }
@@ -36,15 +39,28 @@ public class OddAttachment {
         origWorldPos = VectorConversionsMCKt.toJOML(blockPos);
         origChunkPos = VectorConversionsMCKt.toJOML(chunkPos);
     }
+
     public OddAttachment(String dim, BlockPos blockPos) {
         origDim = dim;
         origWorldPos = VectorConversionsMCKt.toJOML(blockPos);
         origChunkPos = VectorConversionsMCKt.toJOML(new ChunkPos(blockPos));
     }
+
     public OddAttachment(String dim, Vector3i blockCoords, Vector2i chunkCoords) {
         origDim = dim;
         origWorldPos = blockCoords;
         origChunkPos = chunkCoords;
     }
-    public OddAttachment() {}
+
+    public OddAttachment() {
+    }
+
+    public static OddAttachment getOrCreate(ServerShip ship) {
+        OddAttachment result = ship.getAttachment(OddAttachment.class);
+        if (result == null) {
+            result = new OddAttachment();
+            ship.saveAttachment(OddAttachment.class, result);
+        }
+        return result;
+    }
 }
