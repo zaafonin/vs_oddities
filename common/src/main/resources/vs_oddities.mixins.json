@@ -6,18 +6,20 @@
   "client": [
   ],
   "mixins": [
-    "treechop.MixinFellTreeResult",
-    "dispenser.MixinDispenseItemBehavior",
-    "commands.MixinVSCommands",
-    "biomes.MixinShipObjectServerWorld",
     "biomes.MixinChunkAccess",
     "biomes.MixinServerLevel",
+    "biomes.MixinShipObjectServerWorld",
+    "commands.MixinVSCommands",
+    "create.processing.basin.MixinBasinBlockEntity",
+    "create.processing.basin.MixinBasinOperatingBlockEntity",
+    "dispenser.MixinDispenseItemBehavior",
     "light.IMixinRenderChunkRegion",
     "light.MixinBlockAndTintGetter",
-    "sculk.MixinVibrationSystem",
-    "sculk.MixinGameEventDispatcher",
     "sculk.MixinEuclideanGameEventListenerRegistry",
-    "snoop.MixinLevelChunk"
+    "sculk.MixinGameEventDispatcher",
+    "sculk.MixinVibrationSystem",
+    "snoop.MixinLevelChunk",
+    "treechop.MixinFellTreeResult"
   ],
   "injectors": {
     "defaultRequire": 1

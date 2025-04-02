@@ -14,6 +14,7 @@ import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
+import org.valkyrienskies.mod.util.McMathUtilKt;
 import org.valkyrienskies.physics_api.PoseVel;
 
 import java.util.HashMap;
@@ -43,8 +44,14 @@ public class LiftDragInducer implements ShipForcesInducer {
     @Override
     public void applyForces(@NotNull PhysShip physShip) {
         PhysShipImpl implShip = (PhysShipImpl) physShip;
-        // TODO: This is a placeholder. Anyone got a spare PID regulator?
-        physShip.applyInvariantForce(new Vector3d(0, blockEasyLift * 100 /* because dt = 1/100 */, 0));
+        // PID not really needed.
+        double antiGravityForce = implShip.getInertia().getShipMass() * 10.0;
+
+        physShip.applyInvariantForce(new Vector3d(
+                0,
+                Math.min(antiGravityForce, blockEasyLift) /* because dt = 1/100 */,
+                0
+        ));
     }
 
     public void onSetBlockState(ServerLevel level, BlockPos pos, BlockState oldState, BlockState newState) {

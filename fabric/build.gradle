@@ -49,6 +49,7 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
     api "org.jetbrains.kotlin:kotlin-reflect:1.9.10"
 
+    // region Mods
     // Forge Config API Port
     modImplementation("maven.modrinth:forge-config-api-port:1aKtMQZE")
     // HT's Treechop
@@ -58,6 +59,9 @@ dependencies {
     modImplementation("maven.modrinth:puzzles-lib:qjSRRf2B")
     // Echo Chest
     modImplementation("maven.modrinth:echo-chest:ppi4nxw2")
+    // Use Create Fabric as common
+    modImplementation("com.simibubi.create:create-fabric-${minecraft_version}:${create_fabric_version}")
+    // endregion
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')

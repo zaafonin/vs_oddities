@@ -32,4 +32,7 @@ dependencies {
 
     // Echo Chest
     modCompileOnly("maven.modrinth:echo-chest:ppi4nxw2")
+
+    // Create
+    modCompileOnly("com.simibubi.create:create-fabric-${minecraft_version}:${create_fabric_version}")
 }

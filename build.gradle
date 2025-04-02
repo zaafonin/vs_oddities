@@ -57,6 +57,9 @@ subprojects {
                 includeGroup("maven.modrinth")
             }
         }
+        // Mods
+        maven { url = "https://mvn.devos.one/snapshots/" } // Fabric Create, Porting Lib, Forge Tags, Milk Lib
+        maven { url = "https://maven.tterrag.com/" } // Registrate, Forge Create and Flywheel
     }
 
     loom {

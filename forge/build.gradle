@@ -53,11 +53,18 @@ dependencies {
     implementation("org.valkyrienskies.core:impl:${rootProject.vs_core_version}")
     implementation("thedarkcolour:kotlinforforge:$forge_kotlin_version")
 
+    // region Mods
     // HT's Treechop
     modImplementation("maven.modrinth:treechop:0.19.0")
 
     // Echo Chest
     //modImplementation("maven.modrinth:echo-chest:aQcerSRS")
+
+    // Create
+    modImplementation("com.simibubi.create:create-${minecraft_version}:${create_forge_version}:slim") { transitive = false }
+    modImplementation("com.tterrag.registrate:Registrate:${registrate_forge_version}")
+    modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_forge_minecraft_version}:${flywheel_forge_version}")
+    // endregion
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':common', configuration: 'transformProductionForge')) { transitive false }
