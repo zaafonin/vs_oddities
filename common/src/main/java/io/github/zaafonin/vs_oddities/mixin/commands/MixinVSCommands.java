@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import io.github.zaafonin.vs_oddities.commands.DryCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -33,6 +34,8 @@ public abstract class MixinVSCommands {
 
     @Inject(method = "registerServerCommands", at = @At("TAIL"), remap = false)
     private void modifyvs(@NotNull CommandDispatcher<CommandSourceStack> dispatcher, CallbackInfo ci) {
+        // TODO: There might a better place to register a command that is not exactly VS-related.
+        DryCommand.register(dispatcher);
         // TODO: This used to work a few days ago. Not first priority but it would be good to get it functional.
         dispatcher.register(
                 literal("vs").then(literal("break").then(argument("ships", ShipArgument.Companion.ships()).then(argument("drop", BoolArgumentType.bool())).executes(ctx ->
