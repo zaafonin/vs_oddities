@@ -27,7 +27,7 @@ public abstract class MixinLevelChunk {
     Level level;
 
     @Shadow
-    abstract BlockState getBlockState(net.minecraft.core.BlockPos blockPos);
+    public abstract BlockState getBlockState(net.minecraft.core.BlockPos blockPos);
 
     @Inject(method = "setBlockState", at = @At("HEAD")) // need to fetch the old block state
     private void trackOddProperties(BlockPos blockPos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> ci) {

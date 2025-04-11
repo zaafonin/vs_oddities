@@ -6,8 +6,10 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.zaafonin.vs_oddities.commands.DryCommand;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +40,7 @@ public abstract class MixinVSCommands {
         DryCommand.register(dispatcher);
         // TODO: This used to work a few days ago. Not first priority but it would be good to get it functional.
         dispatcher.register(
-                literal("vs").then(literal("break").then(argument("ships", ShipArgument.Companion.ships()).then(argument("drop", BoolArgumentType.bool())).executes(ctx ->
+                literal("vs").then(literal("break").then(argument("ships", ShipArgument.Companion.ships()).then(argument("drop", BoolArgumentType.bool()).executes(ctx ->
                 {
                     MinecraftServer server = ((CommandContext<CommandSourceStack>) ctx).getSource().getServer();
                     Set<ServerShip> ships = ShipArgument.Companion.getShips(ctx, "ships");
@@ -46,11 +48,27 @@ public abstract class MixinVSCommands {
                     ships.forEach(ship ->
                             {
                                 ServerLevel level = OddUtils.getLevelOfShip(server, ship);
-                                OddUtils.streamShipBlocks(level, ship).forEach(
-                                        pos -> level.destroyBlock(pos, drop)
-                                );
+                                for (BlockPos blockPos : OddUtils.iterateShipBlocks(level, ship)) {
+                                    level.destroyBlock(blockPos, drop);
+                                }
                             }
                     );
+                    return 0;
+                })))));
+        dispatcher.register(
+                literal("vs").then(literal("dry").then(argument("ships", ShipArgument.Companion.ships()).executes(ctx ->
+                {
+                    MinecraftServer server = ((CommandContext<CommandSourceStack>) ctx).getSource().getServer();
+                    Set<ServerShip> ships = ShipArgument.Companion.getShips(ctx, "ships");
+                    ships.forEach(ship ->
+                    {
+                        ServerLevel level = OddUtils.getLevelOfShip(server, ship);
+                        try {
+                            DryCommand.dryBlocks((CommandSourceStack) ctx.getSource(), OddUtils.toMinecraft(ship.getShipAABB()));
+                        } catch (CommandSyntaxException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                     return 0;
                 }))));
     }
