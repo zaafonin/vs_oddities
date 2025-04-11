@@ -26,7 +26,7 @@ import io.github.zaafonin.vs_oddities.util.OddUtils;
 
 import java.util.*;
 
-@Mixin(VSCommands.class)
+@Mixin(value = VSCommands.class, remap = false)
 public abstract class MixinVSCommands {
     @Shadow
     protected abstract LiteralArgumentBuilder<VSCommandSource> literal(String name);
@@ -34,7 +34,7 @@ public abstract class MixinVSCommands {
     @Shadow
     protected abstract <T> RequiredArgumentBuilder argument(String name, ArgumentType<T> type);
 
-    @Inject(method = "registerServerCommands", at = @At("TAIL"), remap = false)
+    @Inject(method = "registerServerCommands", at = @At("TAIL"))
     private void modifyvs(@NotNull CommandDispatcher<CommandSourceStack> dispatcher, CallbackInfo ci) {
         // TODO: There might a better place to register a command that is not exactly VS-related.
         DryCommand.register(dispatcher);

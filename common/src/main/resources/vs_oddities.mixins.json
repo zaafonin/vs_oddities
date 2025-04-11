@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "client": [
+    "f3.MixinDebugScreenOverlay"
   ],
   "mixins": [
     "biomes.MixinChunkAccess",
@@ -18,6 +19,7 @@
     "echochest.MixinEchoChestBlockEntity",
     "light.IMixinRenderChunkRegion",
     "light.MixinBlockAndTintGetter",
+    "mass.MixinDefaultBlockStateInfoProvider",
     "sculk.MixinEuclideanGameEventListenerRegistry",
     "sculk.MixinGameEventDispatcher",
     "sculk.MixinVibrationSystem",

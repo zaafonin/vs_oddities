@@ -9,9 +9,9 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
-@Mixin(EchoChestBlockEntity.class)
+@Mixin(value = EchoChestBlockEntity.class, remap = false)
 public class MixinEchoChestBlockEntity {
-    @WrapMethod(method = "isOccluded", remap = false)
+    @WrapMethod(method = "isOccluded")
     private static boolean adjustOcclusionForWorldPosition(Level level, Vec3 pos1, Vec3 pos2, Operation<Boolean> original) {
         if (VSGameUtilsKt.getShipManagingPos(level, pos1) != VSGameUtilsKt.getShipManagingPos(level, pos2)) {
             // In ship-to-world or ship-to-ship events, check occlusion in world coordinates.

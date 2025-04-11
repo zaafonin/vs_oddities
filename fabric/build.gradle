@@ -59,6 +59,7 @@ dependencies {
     modImplementation("maven.modrinth:puzzles-lib:qjSRRf2B")
     // Echo Chest
     modImplementation("maven.modrinth:echo-chest:ppi4nxw2")
+
     // Use Create Fabric as common
     modImplementation("com.simibubi.create:create-fabric-${minecraft_version}:${create_fabric_version}")
     // endregion

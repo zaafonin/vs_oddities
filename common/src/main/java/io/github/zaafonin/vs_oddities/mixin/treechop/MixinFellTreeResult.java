@@ -23,12 +23,12 @@ import org.valkyrienskies.mod.common.assembly.ShipAssemblyKt;
 import java.util.Collection;
 
 @Pseudo
-@Mixin(FellTreeResult.class)
+@Mixin(value = FellTreeResult.class, remap = false)
 public abstract class MixinFellTreeResult {
-    @Shadow(remap = false)
+    @Shadow
     @Final
     private Level level;
-    @Shadow(remap = false)
+    @Shadow
     @Final
     private FellDataImpl fellData;
 
