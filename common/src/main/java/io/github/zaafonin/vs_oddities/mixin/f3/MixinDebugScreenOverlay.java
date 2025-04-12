@@ -1,6 +1,8 @@
 package io.github.zaafonin.vs_oddities.mixin.f3;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import io.github.zaafonin.vs_oddities.ship.OddAttachment;
+import io.github.zaafonin.vs_oddities.ship.PhysShipSnooper;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -11,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,10 +21,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.core.api.ships.LoadedServerShipKt;
-import org.valkyrienskies.core.api.ships.LoadedShip;
-import org.valkyrienskies.core.api.ships.Ship;
+import org.valkyrienskies.core.api.ships.*;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.entity.ShipMountedToData;
 import org.valkyrienskies.mod.common.util.EntityDraggingInformation;
@@ -38,14 +38,26 @@ public abstract class MixinDebugScreenOverlay {
     @Shadow
     private HitResult block;
     @Shadow
-    abstract Level getLevel();
+    protected abstract Level getLevel();
+
+    @Inject(method = "getGameInformation", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 1))
+    private void addShipCountInformation(CallbackInfoReturnable<List<String>> cir, @Local List<String> list) {
+        QueryableShipData<Ship> ships = VSGameUtilsKt.getAllShips(getLevel());
+        list.add("Ships: " + ships.size());
+    }
 
     @Inject(method = "getGameInformation", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 6, shift = At.Shift.AFTER))
-    private void addPlayerShipInformation(CallbackInfoReturnable<List<String>> cir, @Local List<String> list) {
+    private void addPlayerDraggingInformation(CallbackInfoReturnable<List<String>> cir, @Local List<String> list) {
         EntityDraggingInformation info = ((IEntityDraggingInformationProvider)minecraft.player).getDraggingInformation();
         if (info != null) {
             if (info.isEntityBeingDraggedByAShip()) {
-                list.add("Dragged by: " + VSGameUtilsKt.getAllShips(getLevel()).getById(info.getLastShipStoodOn()).getSlug());
+                Long shipId = info.getLastShipStoodOn();
+                if (shipId != null) {
+                    Ship ship = VSGameUtilsKt.getAllShips(getLevel()).getById(shipId);
+                    if (ship != null) {
+                        list.add("Dragged by: " + VSGameUtilsKt.getAllShips(getLevel()).getById(info.getLastShipStoodOn()).getSlug());
+                    }
+                }
             }
         }
     }
@@ -60,8 +72,23 @@ public abstract class MixinDebugScreenOverlay {
             list.add("");
             list.add(ChatFormatting.UNDERLINE + "Targeted Ship: " + ship.getSlug());
             if (lsship != null) {
+                // Seems like ship's physical behavior is none of client's business.
                 list.add("Static: " + lsship.isStatic());
                 list.add("Mass: " + lsship.getInertiaData().getMass() + " kg");
+                list.add("");
+                PhysShipSnooper physSnooper = PhysShipSnooper.getOrCreate(lsship);
+                physSnooper.addDebugLines(list);
+            }
+            Vector3dc scale = ship.getTransform().getShipToWorldScaling();
+            if (!scale.equals(new Vector3d(1, 1, 1), 0.0005)) {
+                // Dealing with a scaled ship.
+                list.add(String.format(
+                        Locale.ROOT,
+                        "Ship Scale: %.3f / %.3f / %.3f",
+                        scale.x(),
+                        scale.y(),
+                        scale.z()
+                ));
             }
             Vector3dc linVel = ship.getVelocity();
             list.add(String.format(

@@ -5,5 +5,5 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface BlockChangeSnooper {
-    abstract public void onSetBlockState(ServerLevel serverLevel, BlockPos blockPos, BlockState oldBlockState, BlockState blockState);
+    public void onSetBlockState(ServerLevel serverLevel, BlockPos blockPos, BlockState oldBlockState, BlockState blockState);
 }

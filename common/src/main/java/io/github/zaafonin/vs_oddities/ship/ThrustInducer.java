@@ -7,6 +7,7 @@ import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
 
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @JsonAutoDetect(
@@ -15,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
         isGetterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE
 )
-public class ThrustInducer implements ShipForcesInducer {
+public class ThrustInducer implements ShipForcesInducer, DebugPresentable {
     // region Structs
     public class Pulse {
         public Vector3dc force;
@@ -68,5 +69,10 @@ public class ThrustInducer implements ShipForcesInducer {
             ship.saveAttachment(ThrustInducer.class, result);
         }
         return result;
+    }
+
+    @Override
+    public void addDebugLines(List<String> lines) {
+        lines.add("Active Pulses: " + pulses.size());
     }
 }

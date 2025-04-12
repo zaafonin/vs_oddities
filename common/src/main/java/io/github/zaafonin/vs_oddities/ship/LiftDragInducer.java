@@ -19,10 +19,7 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 import org.valkyrienskies.mod.util.McMathUtilKt;
 import org.valkyrienskies.physics_api.PoseVel;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @JsonAutoDetect(
         fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -30,7 +27,7 @@ import java.util.Objects;
         isGetterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE
 )
-public class LiftDragInducer implements ShipForcesInducer {
+public class LiftDragInducer implements ShipForcesInducer, BlockChangeSnooper, DebugPresentable {
 
     double blockEasyLift = 0;
     double blockDrag = 0;
@@ -96,5 +93,11 @@ public class LiftDragInducer implements ShipForcesInducer {
             ship.saveAttachment(LiftDragInducer.class, result);
         }
         return result;
+    }
+
+    @Override
+    public void addDebugLines(List<String> lines) {
+        lines.add(String.format("Can Levitate: %.2f kg", blockEasyLift));
+        lines.add(String.format("Lift Creators: %d", blockLifts.size()));
     }
 }
