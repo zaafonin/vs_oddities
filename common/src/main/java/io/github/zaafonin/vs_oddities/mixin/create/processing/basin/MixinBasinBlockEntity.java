@@ -30,7 +30,7 @@ import org.valkyrienskies.mod.common.command.VSCommands;
 import java.util.Optional;
 
 @Pseudo
-@Mixin(BasinBlockEntity.class)
+@Mixin(value = BasinBlockEntity.class, remap = false)
 public abstract class MixinBasinBlockEntity extends SmartBlockEntity {
     @Shadow public abstract void notifyUpdate();
 
@@ -41,7 +41,7 @@ public abstract class MixinBasinBlockEntity extends SmartBlockEntity {
         setLazyTickRate(3); // Update every second.
     }
 
-    @Inject(method = "lazyTick", at = @At("RETURN"), remap = false)
+    @Inject(method = "lazyTick", at = @At("RETURN"))
     protected void forceUpdate(CallbackInfo ci) {
         if (!level.isClientSide) {
             notifyUpdate();
@@ -49,7 +49,7 @@ public abstract class MixinBasinBlockEntity extends SmartBlockEntity {
         }
     }
 
-    @Inject(method = "getOperator", at = @At("RETURN"), cancellable = true, remap = false)
+    @Inject(method = "getOperator", at = @At("RETURN"), cancellable = true)
     protected void checkShipBasinCheckers(CallbackInfoReturnable<Optional<BasinOperatingBlockEntity>> cir) {
         if (cir.getReturnValue().isEmpty()) {
             // If we didn't find a basin operator, account for ship positions by raycasting (duh).

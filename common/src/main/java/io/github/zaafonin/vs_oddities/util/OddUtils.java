@@ -53,7 +53,7 @@ public abstract class OddUtils {
     }
 
     /**
-     * A less verbose wrapper around {@Link VSGameUtilsKt#getWorldCoordinates}.
+     * A less verbose wrapper around {@link VSGameUtilsKt#getWorldCoordinates}.
      * @return {@link Vec3} pos in world coordinates
      */
     public static Vec3 getWorldCoordinates(Level level, Vec3 pos) {

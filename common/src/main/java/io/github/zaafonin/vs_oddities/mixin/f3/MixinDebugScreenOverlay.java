@@ -1,6 +1,9 @@
 package io.github.zaafonin.vs_oddities.mixin.f3;
 
+import com.google.common.collect.MutableClassToInstanceMap;
 import com.llamalad7.mixinextras.sugar.Local;
+import io.github.zaafonin.vs_oddities.mixin.vs2.AccessShipData;
+import io.github.zaafonin.vs_oddities.ship.DebugPresentable;
 import io.github.zaafonin.vs_oddities.ship.OddAttachment;
 import io.github.zaafonin.vs_oddities.ship.PhysShipSnooper;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
@@ -22,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.valkyrienskies.core.api.ships.*;
+import org.valkyrienskies.core.impl.game.ships.ShipObjectServer;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.entity.ShipMountedToData;
 import org.valkyrienskies.mod.common.util.EntityDraggingInformation;
@@ -76,8 +80,14 @@ public abstract class MixinDebugScreenOverlay {
                 list.add("Static: " + lsship.isStatic());
                 list.add("Mass: " + lsship.getInertiaData().getMass() + " kg");
                 list.add("");
-                PhysShipSnooper physSnooper = PhysShipSnooper.getOrCreate(lsship);
-                physSnooper.addDebugLines(list);
+                // Sus: accessor to vscore.
+                MutableClassToInstanceMap<?> attachments = ((AccessShipData)((ShipObjectServer)lsship).asShipDataCommon()).getPersistentAttachedData();
+                attachments.forEach((k, v) -> {
+                    list.add(ChatFormatting.UNDERLINE + k.toString());
+                    if (v instanceof DebugPresentable) {
+                        ((DebugPresentable)v).addDebugLines(list);
+                    }
+                });
             }
             Vector3dc scale = ship.getTransform().getShipToWorldScaling();
             if (!scale.equals(new Vector3d(1, 1, 1), 0.0005)) {

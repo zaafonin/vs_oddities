@@ -25,13 +25,13 @@ public class PhysShipSnooper implements ShipForcesInducer, DebugPresentable {
 
     @Override
     public void applyForces(@NotNull PhysShip physShip) {
-        inducerList = ((PhysShipImpl)physShip).getForceInducers();
-        buoyantFactor = ((PhysShipImpl)physShip).getBuoyantFactor();
+        PhysShipImpl impl = (PhysShipImpl)physShip;
+        inducerList = impl.getForceInducers();
     }
 
     @Override
     public void addDebugLines(List<String> lines) {
-        if (inducerList == null) return;
+        /*if (inducerList == null) return;
         lines.add(ChatFormatting.UNDERLINE + "Force Inducers:");
         inducerList.forEach(inducer -> {
             lines.add(ChatFormatting.UNDERLINE + inducer.toString());
@@ -40,6 +40,6 @@ public class PhysShipSnooper implements ShipForcesInducer, DebugPresentable {
             }
             lines.add("");
         });
-        lines.add("");
+        lines.add("");*/
     }
 }

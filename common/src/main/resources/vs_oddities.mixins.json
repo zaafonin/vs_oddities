@@ -16,7 +16,9 @@
     "create.processing.basin.MixinBasinOperatingBlockEntity",
     "create.processing.basin.MixinBasinRecipe",
     "dispenser.MixinDispenseItemBehavior",
+    "echochest.AccessBlockPositionSource",
     "echochest.MixinEchoChestBlockEntity",
+    "echochest.MixinEchoChestVibrationUser",
     "light.IMixinRenderChunkRegion",
     "light.MixinBlockAndTintGetter",
     "mass.MixinDefaultBlockStateInfoProvider",
@@ -24,7 +26,8 @@
     "sculk.MixinGameEventDispatcher",
     "sculk.MixinVibrationSystem",
     "snoop.MixinLevelChunk",
-    "treechop.MixinFellTreeResult"
+    "treechop.MixinFellTreeResult",
+    "vs2.AccessShipData"
   ],
   "injectors": {
     "defaultRequire": 1
