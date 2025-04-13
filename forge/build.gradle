@@ -45,13 +45,52 @@ dependencies {
     // Conditional Mixin
     implementation(include("me.fallenbreath:conditional-mixin-forge:${rootProject.conditional_mixin}"))
 
-    // VS2
+    // Valkyrien Skies 2
     modApi("org.valkyrienskies:valkyrienskies-120-forge:${rootProject.vs2_version}") { transitive = false }
     implementation("org.valkyrienskies.core:api:${rootProject.vs_core_version}")
     implementation("org.valkyrienskies.core:api-game:${rootProject.vs_core_version}")
     implementation("org.valkyrienskies.core:util:${rootProject.vs_core_version}")
     implementation("org.valkyrienskies.core:impl:${rootProject.vs_core_version}")
     implementation("thedarkcolour:kotlinforforge:$forge_kotlin_version")
+
+    // region Manually include every single dependency of vs-core (total meme)
+    /*forgeRuntimeLibrary include("org.valkyrienskies.core:api:${rootProject.vs_core_version}") {
+        transitive = false
+    }
+
+    forgeRuntimeLibrary include("org.valkyrienskies.core:util:${rootProject.vs_core_version}") {
+        transitive = false
+    }*/
+
+    forgeRuntimeLibrary implementation("javax.inject:javax.inject:1") { transitive = false }
+
+    // JOML for Math
+    forgeRuntimeLibrary implementation("org.joml:joml:1.10.4") { transitive = false }
+    forgeRuntimeLibrary implementation("org.joml:joml-primitives:1.10.0") { transitive = false }
+
+    // Apache Commons Math for Linear Programming
+    forgeRuntimeLibrary implementation("org.apache.commons:commons-math3:3.6.1") { transitive = false }
+
+    // Jackson Binary Dataformat for Object Serialization
+    def jacksonVersion = '2.14.0'
+    // forked to remove module-info
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion-rubyfork") { transitive = false }
+    implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:$jacksonVersion") { transitive = false }
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion") { transitive = false }
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion") { transitive = false }
+    implementation("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion") { transitive = false }
+    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion") { transitive = false }
+    implementation("com.github.Rubydesic:jackson-kotlin-dsl:1.2.0") { transitive = false }
+    implementation("com.networknt:json-schema-validator:1.0.71") { transitive = false }
+    implementation("com.ethlo.time:itu:1.7.0") { transitive = false }
+    implementation("com.github.victools:jsonschema-module-jackson:4.25.0") { transitive = false }
+    implementation("com.github.victools:jsonschema-generator:4.25.0") { transitive = false }
+    implementation("com.fasterxml:classmate:1.5.1") { transitive = false }
+    implementation("com.flipkart.zjsonpatch:zjsonpatch:0.4.11") { transitive = false }
+    implementation("org.apache.commons:commons-collections4:4.3") { transitive = false }
+    implementation("com.google.dagger:dagger:2.43.2") { transitive = false }
+
+    // endregion
 
     // region Mods
     // HT's Treechop

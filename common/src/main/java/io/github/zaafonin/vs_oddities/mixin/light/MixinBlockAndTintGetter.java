@@ -35,7 +35,14 @@ public interface MixinBlockAndTintGetter {
 
     @Inject(method = "getBrightness", at = @At("HEAD"), cancellable = true)
     default void applyWorldBrightness(LightLayer lightType, BlockPos blockPos, CallbackInfoReturnable<Integer> ci) {
-        Level level = getLevel();
+        // Cursed.
+        Level level = null;
+        if (this instanceof Level) {
+            level = (Level) this;
+        } else if (this instanceof RenderChunkRegion) {
+            level = ((IMixinRenderChunkRegion) this).getLevel();
+        }
+
         if (level != null) {
             Ship ship = VSGameUtilsKt.getShipManagingPos(level, blockPos);
             if (ship != null) {
@@ -62,16 +69,5 @@ public interface MixinBlockAndTintGetter {
                 ci.cancel();
             }
         }
-    }
-
-    // Cursed.
-    private Level getLevel() {
-        Level level = null;
-        if (this instanceof Level) {
-            level = (Level) this;
-        } else if (this instanceof RenderChunkRegion) {
-            level = ((IMixinRenderChunkRegion) this).getLevel();
-        }
-        return level;
     }
 }
