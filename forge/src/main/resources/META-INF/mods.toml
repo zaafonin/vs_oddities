@@ -1,17 +1,18 @@
 modLoader = "javafml"
 loaderVersion = "[47,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+issueTrackerURL = "https://github.com/zaafonin/vs_oddities/issues"
+license = "MIT"
 
 [[mods]]
 modId = "vs_oddities"
 version = "${version}"
 displayName = "VS Oddities"
-authors = "Me!"
+displayURL = "https://github.com/zaafonin/vs_oddities"
+authors = "zaafonin"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Minor fixes, mod integration and QoL features for Valkyrien Skies 2.
 '''
-#logoFile = ""
+logoFile = "logo.png"
 
 [[dependencies.vs_oddities]]
 modId = "forge"
@@ -31,5 +32,12 @@ side = "BOTH"
 modId = "architectury"
 mandatory = true
 versionRange = "[9.2.14,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.vs_oddities]]
+modId = "valkyrienskies"
+mandatory = true
+versionRange = "[2.1.3-beta.1,)"
 ordering = "AFTER"
 side = "BOTH"

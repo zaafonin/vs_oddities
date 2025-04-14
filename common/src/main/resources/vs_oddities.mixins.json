@@ -20,7 +20,6 @@
     "echochest.MixinEchoChestBlockEntity",
     "echochest.MixinEchoChestVibrationUser",
     "light.IMixinRenderChunkRegion",
-    "light.MixinBlockAndTintGetter",
     "mass.MixinDefaultBlockStateInfoProvider",
     "sculk.MixinEuclideanGameEventListenerRegistry",
     "sculk.MixinGameEventDispatcher",

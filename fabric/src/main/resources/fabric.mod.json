@@ -3,16 +3,16 @@
   "id": "vs_oddities",
   "version": "${version}",
   "name": "VS Oddities",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Minor fixes, mod integration and QoL features for Valkyrien Skies 2.",
   "authors": [
-    "Me!"
+    "zaafonin"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/zaafonin/vs_oddities"
   },
-  "license": "CC0-1.0",
-  "icon": "assets/vs_oddities/icon.png",
+  "license": "MIT",
+  "icon": "logo.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -28,6 +28,7 @@
   "depends": {
     "fabricloader": ">=0.16.10",
     "minecraft": "~1.20.1",
+    "valkyrienskies": ">=2.1.3-beta.1",
     "java": ">=17",
     "architectury": ">=9.2.14",
     "fabric-api": "*"
