@@ -4,8 +4,6 @@ import com.google.common.collect.MutableClassToInstanceMap;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.zaafonin.vs_oddities.mixin.vs2.AccessShipData;
 import io.github.zaafonin.vs_oddities.ship.DebugPresentable;
-import io.github.zaafonin.vs_oddities.ship.OddAttachment;
-import io.github.zaafonin.vs_oddities.ship.PhysShipSnooper;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -27,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.valkyrienskies.core.api.ships.*;
 import org.valkyrienskies.core.impl.game.ships.ShipObjectServer;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.entity.ShipMountedToData;
 import org.valkyrienskies.mod.common.util.EntityDraggingInformation;
 import org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider;
 

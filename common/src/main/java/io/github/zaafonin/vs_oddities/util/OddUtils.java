@@ -29,7 +29,7 @@ public abstract class OddUtils {
     /**
      * Get all blocks of a {@link Ship} as a Java stream.
      * Limited by ship's {@link org.joml.primitives.AABBi}.
-     * @return {@link Stream<BlockPos>} with positions laid out sequentially (x -> y -> z).
+     * @return {@link Stream<BlockPos>} with positions laid out sequentially: (0, 0, 0), (0, 0, 1), ..., (0, 0, z), (0, 1, 0), (0, 1, 1), ...
      */
     public static Stream<BlockPos> streamShipBlocks(Level level, Ship ship) {
         AABBic aabb = ship.getShipAABB();
@@ -44,6 +44,8 @@ public abstract class OddUtils {
 
     /**
      * Get an iterable of all ship blocks. Useful for filling and other per-block operations.
+     * <p>
+     * Can be iterated like: {@code for (BlockPos blockPos : OddUtils.iterateShipBlocks(level, ship)) { ... } }
      */
     public static Iterable<BlockPos> iterateShipBlocks(Level level, Ship ship) {
         AABBic aabb = ship.getShipAABB();
@@ -62,7 +64,7 @@ public abstract class OddUtils {
 
     /**
      * A null-checking wrapper around {@link VSGameUtilsKt#toWorldCoordinates(Ship, Vec3)}.
-     * If {@link Ship} is null, return the position argument.
+     * If {@link Ship} is null, return the position unmodified.
      * @return {@link Vec3} pos in world coordinates
      */
     public static Vec3 toWorldCoordinates(Ship ship, Vec3 pos) {
@@ -73,6 +75,8 @@ public abstract class OddUtils {
     /**
      * Get nearest {@link BlockPos} for a point by rounding.
      * Differs from {@link BlockPos#containing(Position)} which floors coordinates.
+     * <p>
+     * NB: Does not account for nearby ships: nearest block to a regular world position is always in world, nearest block to a position in shipyard is always in the same shipyard.
      * @return resulting blockPos
      */
     public static BlockPos toNearestBlock(Vec3 vec) {
@@ -80,14 +84,16 @@ public abstract class OddUtils {
     }
 
     /**
-     * Get nearest {@link BlockPos} for a point by rounding.
-     * Differs from {@link BlockPos#containing(Position)} which floors coordinates.
+     * Get nearest {@link BlockPos} for a point by rounding. See {@link OddUtils#toNearestBlock(Vec3)}
      * @return resulting blockPos
      */
     public static BlockPos toNearestBlock(Vector3dc vec) {
         return new BlockPos((int) (vec.x() + 0.5), (int) (vec.y() + 0.5), (int) (vec.z() + 0.5));
     }
 
+    /**
+     * Convert a {@link AABBic} (integer AABB from JOML) to a Minecraft {@link BoundingBox}.
+     */
     public static BoundingBox toMinecraft(AABBic aabb) {
         return new BoundingBox(
                 aabb.minX(), aabb.minY(), aabb.minZ(),

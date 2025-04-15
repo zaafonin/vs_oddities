@@ -37,7 +37,7 @@ public abstract class MixinDispenseItemBehavior {
         Direction direction = blockSource.getBlockState().getValue(DispenserBlock.FACING);
 
         ServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, VectorConversionsMCKt.toJOML(position));
-        if (ship == null) return; // No ship, no recoil.
+        if (ship == null || ship.isStatic()) return; // No ship, no recoil.
 
         double recoilFactor = 0.5e6; // Small but noticeable recoil for projectiles such as arrows and snowballs.
         // TODO: This should be data!

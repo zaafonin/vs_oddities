@@ -103,11 +103,13 @@ dependencies {
     modImplementation("fuzs.puzzlesaccessapi:puzzlesaccessapi-forge:20.1.1")
     // Echo Chest
     modImplementation("maven.modrinth:echo-chest:aQcerSRS")
-
     // Create
     modImplementation("com.simibubi.create:create-${minecraft_version}:${create_forge_version}:slim") { transitive = false }
     modImplementation("com.tterrag.registrate:Registrate:${registrate_forge_version}")
     modImplementation("com.jozufozu.flywheel:flywheel-forge-${flywheel_forge_minecraft_version}:${flywheel_forge_version}")
+    // Destroy
+    modImplementation("maven.modrinth:petrolpark:${petrolpark_version}")
+    //modImplementation("maven.modrinth:destroy:${destroy_version}")
     // endregion
 
     // QoL, performance, utils
