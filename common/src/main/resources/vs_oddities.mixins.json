@@ -26,8 +26,10 @@
     "sculk.MixinVibrationSystem",
     "snoop.MixinLevelChunk",
     "treechop.MixinFellTreeResult",
+    "vs2.AccessEntity",
     "vs2.AccessShipData",
-    "vs2.MixinEntity"
+    "vs2.MixinEntity",
+    "vs2.MixinPrimedTnt"
   ],
   "injectors": {
     "defaultRequire": 1

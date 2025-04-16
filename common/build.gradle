@@ -1,29 +1,29 @@
 architectury {
-    common rootProject.enabled_platforms.split(',')
+    common enabled_platforms.split(',')
 }
 
 dependencies {
     // We depend on Fabric Loader here to use the Fabric @Environment annotations,
     // which get remapped to the correct annotations on each platform.
     // Do NOT use other classes from Fabric Loader.
-    modImplementation "net.fabricmc:fabric-loader:$rootProject.fabric_loader_version"
+    modImplementation "net.fabricmc:fabric-loader:$fabric_loader_version"
 
     // Architectury API. This is optional, and you can comment it out if you don't need it.
-    modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
+    modImplementation "dev.architectury:architectury:$architectury_api_version"
 
     // Mixin Extras
-    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${rootProject.mixin_extras}"))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras}"))
     // Mixin Squared
-    implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${rootProject.mixin_squared}"))
+    implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared}"))
     // Conditional Mixin
-    implementation("me.fallenbreath:conditional-mixin-fabric:${rootProject.conditional_mixin}")
+    implementation("me.fallenbreath:conditional-mixin-fabric:${conditional_mixin}")
 
     // VS2
-    modApi("org.valkyrienskies:valkyrienskies-120-common:${rootProject.vs2_version}") { transitive = false }
-    compileOnly("org.valkyrienskies.core:api:${rootProject.vs_core_version}")
-    compileOnly("org.valkyrienskies.core:api-game:${rootProject.vs_core_version}")
-    compileOnly("org.valkyrienskies.core:util:${rootProject.vs_core_version}")
-    compileOnly("org.valkyrienskies.core:impl:${rootProject.vs_core_version}")
+    modApi("org.valkyrienskies:valkyrienskies-120-common:${vs2_version}") { transitive = false }
+    compileOnly("org.valkyrienskies.core:api:${vs_core_version}")
+    compileOnly("org.valkyrienskies.core:api-game:${vs_core_version}")
+    compileOnly("org.valkyrienskies.core:util:${vs_core_version}")
+    compileOnly("org.valkyrienskies.core:impl:${vs_core_version}")
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
     api "org.jetbrains.kotlin:kotlin-reflect:1.9.10"
 

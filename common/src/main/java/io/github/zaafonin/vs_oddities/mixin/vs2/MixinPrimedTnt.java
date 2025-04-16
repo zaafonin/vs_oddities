@@ -1,10 +1,11 @@
 package io.github.zaafonin.vs_oddities.mixin.vs2;
 
+import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.phys.Vec3;
 import org.joml.primitives.AABBd;
+import org.joml.primitives.AABBi;
 import org.joml.primitives.AABBic;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 
@@ -15,12 +16,11 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.entity.handling.WorldEntityHandler;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
-@Mixin(value = Entity.class, priority = 1200)
-public abstract class MixinEntity {
-    // Move shipyard entities to world once they quit the ship
+@Mixin(PrimedTnt.class)
+public abstract class MixinPrimedTnt {
+    // JANK: This mixin copies MixinEntity verbatim. Maybe this can be done with a multi-target mixin?
     @Inject(
-            // JANK: Bad injection target. This is called for entities, though.
-            method = "checkBelowWorld",
+            method = "tick",
             at = @At("HEAD")
     )
     void leaveShipyard(CallbackInfo ci) {
