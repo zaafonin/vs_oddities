@@ -28,6 +28,7 @@
     "treechop.MixinFellTreeResult",
     "vs2.AccessEntity",
     "vs2.AccessShipData",
+    "vs2.MixinAbstractMinecart",
     "vs2.MixinEntity",
     "vs2.MixinPrimedTnt"
   ],

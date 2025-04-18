@@ -35,9 +35,9 @@ public class LiftDragInducer implements ShipForcesInducer, BlockChangeSnooper, D
 
     // TODO: vs_mass-style config.
     static Map<Block, Double> liftValues = Map.of(
-            Blocks.GLOWSTONE, 100.0 + 200.0,
-            Blocks.END_STONE, 280.0 + 600.0,
-            Blocks.CRYING_OBSIDIAN, 235.0 + 1600.0
+            Blocks.GLOWSTONE, 1000.0 + 2000,
+            Blocks.END_STONE, 2800.0 + 4200,
+            Blocks.CRYING_OBSIDIAN, 2350.0 + 11750
     );
 
     @Override
@@ -48,7 +48,7 @@ public class LiftDragInducer implements ShipForcesInducer, BlockChangeSnooper, D
         double antiGravityForce = implShip.getInertia().getShipMass() * 10.0;
         physShip.applyInvariantForce(new Vector3d(
                 0,
-                Math.min(antiGravityForce, blockEasyLift * 100.0),
+                Math.min(antiGravityForce, blockEasyLift * 10.0),
                 0
         ));
         // Drag to counteract vertical velocity or at least cushion the fall.

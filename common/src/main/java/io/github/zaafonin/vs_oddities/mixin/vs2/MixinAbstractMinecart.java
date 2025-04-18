@@ -1,5 +1,7 @@
 package io.github.zaafonin.vs_oddities.mixin.vs2;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.minecraft.core.BlockPos;
@@ -64,13 +66,35 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
                             //k.set(shipBlockPos.getX());
                             //i.set(shipBlockPos.getY());
                             //j.set(shipBlockPos.getZ());
-                            ((AccessEntity) e).setPosition(VectorConversionsMCKt.toMinecraft(shipPos).add(0, 1, 0));
+                            e.teleportTo(shipPos.x(), shipPos.y(), shipPos.z());
+                            //((AccessEntity) e).setPosition(VectorConversionsMCKt.toMinecraft(shipPos).add(0, 1, 0));
                         }
                     }
                 }
             } while (false);
         } else {
             System.out.println("World rails are fine.");
+        }
+    }
+
+    /**
+     * Copy of MixinClientPacketListener.java from VS2.
+     * Minecarts override lerpTo(), this is why the VS2 mixin does not work for them.
+     * The reason this mixin is necessary is pretty much the same.
+     */
+    @WrapMethod(
+            method = "lerpTo"
+    )
+    void dumbLerpIfToShipyard(
+            double d, double e, double f, float g, float h, int i, boolean bl, Operation<Void> original
+    ) {
+        Entity en = Entity.class.cast(this);
+        if (VSGameUtilsKt.getShipManagingPos(en.level(), en.position()) != VSGameUtilsKt.getShipManagingPos(en.level(), d, e, f)) {
+            en.setPos(d, e, f);
+            // TODO: Some jank might be related to me not setting any kind of lStep, will fix later today.
+            // original.call(d, e, f, g, h, 1, bl);
+        } else {
+            original.call(d, e, f, g, h, i, bl);
         }
     }
 }
