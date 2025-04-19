@@ -1,4 +1,5 @@
 plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
     id 'com.github.johnrengelman.shadow'
 }
 
@@ -52,7 +53,7 @@ dependencies {
     //implementation("org.valkyrienskies.core:api-game:${vs_core_version}") { transitive = false }
     forgeRuntimeLibrary implementation("org.valkyrienskies.core:util:${vs_core_version}") { transitive = false }
     //forgeRuntimeLibrary implementation("org.valkyrienskies.core:impl:${vs_core_version}") { transitive = false }
-    forgeRuntimeLibrary implementation("thedarkcolour:kotlinforforge:$forge_kotlin_version")
+    forgeRuntimeLibrary implementation("thedarkcolour:kotlinforforge:${forge_kotlin_version}")
 
     // region Manually include every single dependency of vs-core (total meme)
     /*forgeRuntimeLibrary include("org.valkyrienskies.core:api:${vs_core_version}") {
@@ -90,7 +91,6 @@ dependencies {
     forgeRuntimeLibrary implementation("com.flipkart.zjsonpatch:zjsonpatch:0.4.11") { transitive = false }
     forgeRuntimeLibrary implementation("org.apache.commons:commons-collections4:4.3") { transitive = false }
     forgeRuntimeLibrary implementation("com.google.dagger:dagger:2.43.2") { transitive = false }
-
     // endregion
 
     // region Mods
@@ -110,6 +110,8 @@ dependencies {
     // Destroy
     modImplementation("maven.modrinth:petrolpark:${petrolpark_version}")
     //modImplementation("maven.modrinth:destroy:${destroy_version}")
+    // VS Addition
+    //modImplementation("maven.modrinth:vs-addition:1.20.1-0.0.10")
     // endregion
 
     // QoL, performance, utils

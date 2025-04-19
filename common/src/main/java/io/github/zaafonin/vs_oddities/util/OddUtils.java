@@ -4,18 +4,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3d;
 import org.joml.Vector3dc;
-import org.joml.Vector3i;
 import org.joml.primitives.AABBic;
-import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
-import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -99,5 +98,28 @@ public abstract class OddUtils {
                 aabb.minX(), aabb.minY(), aabb.minZ(),
                 aabb.maxX(), aabb.maxY(), aabb.maxZ()
         );
+    }
+
+    /**
+     * Cursed brother of WorldEntityHandler.moveEntityFromShipyardToWorld()
+     */
+    public static void moveEntityFromWorldToShipyard(Entity entity, Ship ship, double entityX, double entityY, double entityZ) {
+        Vector3d newPos = ship.getWorldToShip().transformPosition(new Vector3d(entityX, entityY, entityZ));
+        entity.setPos(VectorConversionsMCKt.toMinecraft(newPos));
+        entity.xo = entity.getX();
+        entity.yo = entity.getY();
+        entity.zo = entity.getZ();
+
+        // TODO: Linear algebra
+
+        Vector3d newPosInShipLocal = new Vector3d(newPos.sub(ship.getTransform().getPositionInWorld()));
+        Vector3d shipVelocity = new Vector3d(ship.getVelocity()) // ship linear velocity
+                .add(new Vector3d(ship.getOmega()).cross(newPosInShipLocal)) // angular velocity
+                .mul(0.05); // Tick velocity
+
+        Vector3d entityVelocity = ship.getTransform().getShipToWorldRotation().transform(VectorConversionsMCKt.toJOML(entity.getDeltaMovement()));
+
+        entity.setDeltaMovement(VectorConversionsMCKt.toMinecraft(new Vector3d(entityVelocity).add(shipVelocity)));
+
     }
 }

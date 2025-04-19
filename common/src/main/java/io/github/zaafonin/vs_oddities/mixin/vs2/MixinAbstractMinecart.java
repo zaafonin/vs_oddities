@@ -10,26 +10,30 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3dc;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.core.util.VectorConversionsKt;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.entity.handling.VSEntityManager;
-import org.valkyrienskies.mod.common.entity.handling.WorldEntityHandler;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.Iterator;
 
 @Mixin(AbstractMinecart.class)
 public abstract class MixinAbstractMinecart extends MixinEntity {
+    @Unique
+    long lastShip = 0;
+    @Unique
+    long lastShipCooldown = 0;
+
     // Snap world minecarts to ship rails.
     @Inject(
             method = "tick",
@@ -44,6 +48,12 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
             @Local(ordinal = 1) LocalIntRef i,
             @Local(ordinal = 2) LocalIntRef j
     ) {
+        if (lastShipCooldown > 0) {
+            lastShipCooldown--;
+        } else {
+            lastShip = 0;
+            lastShipCooldown = 0;
+        }
         AbstractMinecart e = AbstractMinecart.class.cast(this);
         System.out.println("Current position: " + e.position().toString());
         System.out.println("Handled by: " + VSEntityManager.INSTANCE.getHandler(e));
@@ -57,19 +67,24 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
                 if (shipIt.hasNext()) {
                     Ship ship = shipIt.next();
                     System.out.println("Found a ship! " + ship.getSlug());
-                    if (ship != null) {
+                    if (ship != null && ship.getId() != lastShip) {
                         Vector3dc shipPos = ship.getWorldToShip().transformPosition(VectorConversionsMCKt.toJOML(e.position()));
                         BlockPos shipBlockPos = BlockPos.containing(shipPos.x(), shipPos.y(), shipPos.z());
-                        if (e.level().getBlockState(shipBlockPos).is(BlockTags.RAILS)) {
+                        BlockPos shipBlockPos1 = BlockPos.containing(shipPos.x(), shipPos.y() - 1, shipPos.z());
+                        if (
+                                e.level().getBlockState(shipBlockPos).is(BlockTags.RAILS)
+                                ||
+                                e.level().getBlockState(shipBlockPos1).is(BlockTags.RAILS)
+                        ) {
                             System.out.println("Fitting rail for the ship: " + shipBlockPos.toString());
-                            // TODO: Somehow bypass the VS2 mixin for setting position (can't really teleport to shipyard)
-                            //k.set(shipBlockPos.getX());
-                            //i.set(shipBlockPos.getY());
-                            //j.set(shipBlockPos.getZ());
+                            //OddUtils.moveEntityFromWorldToShipyard(e, ship, e.getX(), e.getY(), e.getZ());
                             e.teleportTo(shipPos.x(), shipPos.y(), shipPos.z());
-                            //((AccessEntity) e).setPosition(VectorConversionsMCKt.toMinecraft(shipPos).add(0, 1, 0));
+
+                            lastShip = ship.getId();
+                            lastShipCooldown = 5;
                         }
                     }
+
                 }
             } while (false);
         } else {
@@ -91,8 +106,7 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
         Entity en = Entity.class.cast(this);
         if (VSGameUtilsKt.getShipManagingPos(en.level(), en.position()) != VSGameUtilsKt.getShipManagingPos(en.level(), d, e, f)) {
             en.setPos(d, e, f);
-            // TODO: Some jank might be related to me not setting any kind of lStep, will fix later today.
-            // original.call(d, e, f, g, h, 1, bl);
+            original.call(d, e, f, g, h, -1, bl);
         } else {
             original.call(d, e, f, g, h, i, bl);
         }

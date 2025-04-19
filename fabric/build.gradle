@@ -62,6 +62,11 @@ dependencies {
 
     // Use Create Fabric as common
     modImplementation("com.simibubi.create:create-fabric-${minecraft_version}:${create_fabric_version}")
+
+    // Fabric Language Kotlin
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10")
+    // VS Addition
+    //modLocalRuntime("maven.modrinth:vs-addition:1.20.1-0.0.10") { transitive false }
     // endregion
 
     // QoL, performance, utils

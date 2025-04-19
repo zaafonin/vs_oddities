@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "client": [
-    "f3.MixinDebugScreenOverlay"
+    "f3.MixinDebugScreenOverlay",
+    ,
+    "vs2.MixinClientPacketListener"
   ],
   "mixins": [
     "biomes.MixinChunkAccess",
@@ -26,7 +28,6 @@
     "sculk.MixinVibrationSystem",
     "snoop.MixinLevelChunk",
     "treechop.MixinFellTreeResult",
-    "vs2.AccessEntity",
     "vs2.AccessShipData",
     "vs2.MixinAbstractMinecart",
     "vs2.MixinEntity",
