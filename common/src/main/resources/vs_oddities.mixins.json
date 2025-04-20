@@ -4,14 +4,12 @@
   "compatibilityLevel": "JAVA_17",
   "minVersion": "0.8",
   "client": [
-    "f3.MixinDebugScreenOverlay",
-    ,
-    "vs2.MixinClientPacketListener"
+    "f3.MixinDebugScreenOverlay"
   ],
   "mixins": [
     "biomes.MixinChunkAccess",
     "biomes.MixinServerLevel",
-    "biomes.MixinShipObjectServerWorld",
+    "snoop.MixinShipObjectServerWorld",
     "commands.MixinVSCommands",
     "create.content.kinetics.mixer.MixinMechanicalMixerBlock",
     "create.processing.basin.MixinBasinBlockEntity",
@@ -29,9 +27,9 @@
     "snoop.MixinLevelChunk",
     "treechop.MixinFellTreeResult",
     "vs2.AccessShipData",
-    "vs2.MixinAbstractMinecart",
-    "vs2.MixinEntity",
-    "vs2.MixinPrimedTnt"
+    "shipyard_entities.MixinAbstractMinecart",
+    "shipyard_entities.MixinEntity",
+    "shipyard_entities.MixinPrimedTnt"
   ],
   "injectors": {
     "defaultRequire": 1

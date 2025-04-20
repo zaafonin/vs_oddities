@@ -1,8 +1,11 @@
 package io.github.zaafonin.vs_oddities.fabric;
 
+import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import net.fabricmc.api.ModInitializer;
 
 import io.github.zaafonin.vs_oddities.VSOdditiesMod;
+import net.minecraftforge.fml.config.ModConfig;
 
 public final class VSOdditiesModFabric implements ModInitializer {
     @Override
@@ -13,5 +16,8 @@ public final class VSOdditiesModFabric implements ModInitializer {
 
         // Run our common setup.
         VSOdditiesMod.init();
+
+        ForgeConfigRegistry.INSTANCE.register(VSOdditiesMod.MOD_ID, ModConfig.Type.COMMON, VSOdditiesConfig.Common.SPEC);
+        ForgeConfigRegistry.INSTANCE.register(VSOdditiesMod.MOD_ID, ModConfig.Type.CLIENT, VSOdditiesConfig.Client.SPEC);
     }
 }

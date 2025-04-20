@@ -1,9 +1,7 @@
-package io.github.zaafonin.vs_oddities.mixin.vs2;
+package io.github.zaafonin.vs_oddities.mixin.shipyard_entities;
 
 import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.phys.Vec3;
 import org.joml.primitives.AABBd;
-import org.joml.primitives.AABBi;
 import org.joml.primitives.AABBic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

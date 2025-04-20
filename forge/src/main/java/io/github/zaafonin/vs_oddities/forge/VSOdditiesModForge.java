@@ -1,7 +1,10 @@
 package io.github.zaafonin.vs_oddities.forge;
 
 import dev.architectury.platform.forge.EventBuses;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import io.github.zaafonin.vs_oddities.VSOdditiesMod;
@@ -14,5 +17,8 @@ public final class VSOdditiesModForge {
 
         // Run our common setup.
         VSOdditiesMod.init();
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, VSOdditiesConfig.Common.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, VSOdditiesConfig.Client.SPEC);
     }
 }

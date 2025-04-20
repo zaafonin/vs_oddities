@@ -1,4 +1,4 @@
-package io.github.zaafonin.vs_oddities.mixin.vs2;
+package io.github.zaafonin.vs_oddities.mixin.shipyard_entities;
 
 import net.minecraft.world.phys.AABB;
 import org.joml.primitives.AABBic;

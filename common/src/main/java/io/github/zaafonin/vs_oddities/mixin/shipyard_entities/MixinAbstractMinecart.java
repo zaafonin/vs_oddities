@@ -1,4 +1,4 @@
-package io.github.zaafonin.vs_oddities.mixin.vs2;
+package io.github.zaafonin.vs_oddities.mixin.shipyard_entities;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -7,12 +7,8 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3dc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.entity.handling.VSEntityManager;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.Iterator;
@@ -55,18 +50,14 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
             lastShipCooldown = 0;
         }
         AbstractMinecart e = AbstractMinecart.class.cast(this);
-        System.out.println("Current position: " + e.position().toString());
-        System.out.println("Handled by: " + VSEntityManager.INSTANCE.getHandler(e));
         BlockPos potentialPos = new BlockPos(k.get(), i.get() - 1, j.get());
         if (!e.level().getBlockState(potentialPos).is(BlockTags.RAILS) && !VSGameUtilsKt.isBlockInShipyard(e.level(), potentialPos)) {
-            System.out.println("Not on rails...");
             AABB minecartAABB = new AABB(potentialPos);
             Iterable<Ship> ships = VSGameUtilsKt.getShipsIntersecting(e.level(), minecartAABB);
             do {
                 Iterator<Ship> shipIt = ships.iterator();
                 if (shipIt.hasNext()) {
                     Ship ship = shipIt.next();
-                    System.out.println("Found a ship! " + ship.getSlug());
                     if (ship != null && ship.getId() != lastShip) {
                         Vector3dc shipPos = ship.getWorldToShip().transformPosition(VectorConversionsMCKt.toJOML(e.position()));
                         BlockPos shipBlockPos = BlockPos.containing(shipPos.x(), shipPos.y(), shipPos.z());
@@ -76,7 +67,6 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
                                 ||
                                 e.level().getBlockState(shipBlockPos1).is(BlockTags.RAILS)
                         ) {
-                            System.out.println("Fitting rail for the ship: " + shipBlockPos.toString());
                             //OddUtils.moveEntityFromWorldToShipyard(e, ship, e.getX(), e.getY(), e.getZ());
                             e.teleportTo(shipPos.x(), shipPos.y(), shipPos.z());
 
@@ -87,8 +77,6 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
 
                 }
             } while (false);
-        } else {
-            System.out.println("World rails are fine.");
         }
     }
 

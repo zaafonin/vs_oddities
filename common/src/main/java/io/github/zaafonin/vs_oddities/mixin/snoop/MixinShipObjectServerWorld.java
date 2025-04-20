@@ -1,4 +1,4 @@
-package io.github.zaafonin.vs_oddities.mixin.biomes;
+package io.github.zaafonin.vs_oddities.mixin.snoop;
 
 import io.github.zaafonin.vs_oddities.ship.OddAttachment;
 import net.minecraft.server.MinecraftServer;

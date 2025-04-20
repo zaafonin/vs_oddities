@@ -21,6 +21,7 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 @Mixin(ChunkAccess.class)
 public abstract class MixinChunkAccess {
+
     @Shadow
     public abstract ChunkPos getPos();
 
