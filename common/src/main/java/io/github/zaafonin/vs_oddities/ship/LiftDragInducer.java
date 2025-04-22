@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.joml.Vector3i;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
@@ -86,7 +87,7 @@ public class LiftDragInducer implements ShipForcesInducer, BlockChangeSnooper, D
         // TODO: Implement positional lift similarly to Pulse from ThrustInducer.
     }
 
-    public static LiftDragInducer getOrCreate(ServerShip ship) {
+    public static LiftDragInducer getOrCreate(LoadedServerShip ship) {
         LiftDragInducer result = ship.getAttachment(LiftDragInducer.class);
         if (result == null) {
             result = new LiftDragInducer();

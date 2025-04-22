@@ -9,6 +9,7 @@ import org.joml.Vector2ic;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
 import org.spongepowered.asm.mixin.Debug;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
@@ -62,7 +63,7 @@ public class OddAttachment implements ShipForcesInducer, DebugPresentable {
     public OddAttachment() {
     }
 
-    public static OddAttachment getOrCreate(ServerShip ship) {
+    public static OddAttachment getOrCreate(LoadedServerShip ship) {
         OddAttachment result = ship.getAttachment(OddAttachment.class);
         if (result == null) {
             result = new OddAttachment();

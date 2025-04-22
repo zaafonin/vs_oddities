@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
@@ -36,7 +37,7 @@ public abstract class MixinDispenseItemBehavior {
         Position position = DispenserBlock.getDispensePosition(blockSource);
         Direction direction = blockSource.getBlockState().getValue(DispenserBlock.FACING);
 
-        ServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, VectorConversionsMCKt.toJOML(position));
+        LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, VectorConversionsMCKt.toJOML(position));
         if (ship == null || ship.isStatic()) return; // No ship, no recoil.
 
         double recoilFactor = 0.5e6; // Small but noticeable recoil for projectiles such as arrows and snowballs.
@@ -54,6 +55,6 @@ public abstract class MixinDispenseItemBehavior {
         ThrustInducer applier = ThrustInducer.getOrCreate(ship);
         if (!JOMLrecoil.isFinite()) return; // Something went really wrong with our calculations.
 
-        applier.applyPulse(JOMLrecoil, JOMLposInShip, 1);
+        applier.applyPulse(JOMLrecoil, JOMLposInShip, 1, false);
     }
 }

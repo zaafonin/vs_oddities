@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
@@ -44,7 +45,7 @@ public abstract class MixinChunkAccess {
         if (level == null) return;
 
         ChunkPos chunkpos = this.getPos();
-        ServerShip ship = VSGameUtilsKt.getShipManagingPos(level, chunkpos);
+        LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, chunkpos);
         if (ship == null) return; // Not on a ship, filling biomes in the regular way.
 
         Vector3i shipyardBase = ship.getChunkClaim().getCenterBlockCoordinates(VSGameUtilsKt.getYRange(level), new Vector3i());

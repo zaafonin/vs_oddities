@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.apigame.world.chunks.BlockType;
@@ -33,7 +34,7 @@ public abstract class MixinLevelChunk {
     private void trackOddProperties(BlockPos blockPos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> ci) {
         if (!(level instanceof ServerLevel serverLevel)) return;
 
-        ServerShip ship = VSGameUtilsKt.getShipManagingPos(serverLevel, blockPos);
+        LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, blockPos);
         if (ship == null) return;
 
         BlockState oldBlockState = getBlockState(blockPos);

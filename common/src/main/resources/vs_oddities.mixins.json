@@ -15,6 +15,7 @@
     "create.processing.basin.MixinBasinOperatingBlockEntity",
     "create.processing.basin.MixinBasinRecipe",
     "dispenser.MixinDispenseItemBehavior",
+    "draught_mobs.MixinPathfinderMob",
     "echochest.AccessBlockPositionSource",
     "echochest.MixinEchoChestBlockEntity",
     "echochest.MixinEchoChestVibrationUser",

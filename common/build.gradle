@@ -40,5 +40,5 @@ dependencies {
     modApi("maven.modrinth:forge-config-api-port:1aKtMQZE")
 
     // VS Addition
-    modCompileOnly("maven.modrinth:vs-addition:1.20.1-0.0.10")
+    //modCompileOnly("maven.modrinth:vs-addition:1.20.1-0.0.10")
 }

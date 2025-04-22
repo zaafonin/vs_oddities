@@ -1,13 +1,18 @@
 package io.github.zaafonin.vs_oddities.ship;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
 import org.joml.Vector3dc;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @JsonAutoDetect(
@@ -23,21 +28,24 @@ public class ThrustInducer implements ShipForcesInducer, DebugPresentable {
         public Vector3dc force;
         public Vector3dc pos;
         public int ticks;
+        public boolean invariant;
 
-        public Pulse(Vector3dc force, Vector3dc shipRelativePos, int ticks) {
+        public Pulse(Vector3dc force, Vector3dc shipRelativePos, int ticks, boolean invariant) {
             this.force = force;
             this.pos = shipRelativePos;
             this.ticks = ticks;
+            this.invariant = invariant;
         }
 
-        public Pulse(Vector3dc force, Vector3dc shipRelativePos) {
-            this(force, shipRelativePos, 1);
+        public Pulse(Vector3dc force, Vector3dc shipRelativePos, boolean invariant) {
+            this(force, shipRelativePos, 1, invariant);
         }
     }
     // endregion
 
     // region Stored data
-    private final CopyOnWriteArrayList<Pulse> pulses = new CopyOnWriteArrayList<>();
+    @JsonIgnore
+    private final ConcurrentLinkedQueue<Pulse> pulses = new ConcurrentLinkedQueue<>();
     // endregion
 
     // VS2 necessary
@@ -45,7 +53,11 @@ public class ThrustInducer implements ShipForcesInducer, DebugPresentable {
     public void applyForces(@NotNull PhysShip physShip) {
         // Timed pulses
         pulses.forEach(pulse -> {
-            physShip.applyRotDependentForceToPos(pulse.force, pulse.pos);
+            if (pulse.invariant) {
+                physShip.applyInvariantForceToPos(pulse.force, pulse.pos);
+            } else {
+                physShip.applyRotDependentForceToPos(pulse.force, pulse.pos);
+            }
 
             pulse.ticks -= 1;
         });
@@ -74,13 +86,13 @@ public class ThrustInducer implements ShipForcesInducer, DebugPresentable {
      * @param physTicks Duration to apply the force. 1 game tick ≈ 5 physics ticks.
      * TODO: Ditch the ≈ and adapt to a possibly variable tick rate.
      */
-    public void applyPulse(Vector3dc force, Vector3dc shipRelativePos, int physTicks) {
-        pulses.add(new Pulse(force, shipRelativePos, physTicks));
+    public void applyPulse(Vector3dc force, Vector3dc shipRelativePos, int physTicks, boolean invariant) {
+        pulses.add(new Pulse(force, shipRelativePos, physTicks, invariant));
     }
     // endregion
 
     // Boilerplate as seen in Tournament, Kontraption, etc.
-    public static ThrustInducer getOrCreate(ServerShip ship) {
+    public static ThrustInducer getOrCreate(LoadedServerShip ship) {
         ThrustInducer result = ship.getAttachment(ThrustInducer.class);
         if (result == null) {
             result = new ThrustInducer();

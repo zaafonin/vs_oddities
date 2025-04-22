@@ -2,6 +2,7 @@ package io.github.zaafonin.vs_oddities.ship;
 
 import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
@@ -14,7 +15,7 @@ public class PhysShipSnooper implements ShipForcesInducer, DebugPresentable {
     public List<ShipForcesInducer> inducerList;
     public double buoyantFactor;
 
-    public static PhysShipSnooper getOrCreate(ServerShip ship) {
+    public static PhysShipSnooper getOrCreate(LoadedServerShip ship) {
         PhysShipSnooper result = ship.getAttachment(PhysShipSnooper.class);
         if (result == null) {
             result = new PhysShipSnooper();
