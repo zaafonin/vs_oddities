@@ -50,6 +50,8 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
             lastShipCooldown = 0;
         }
         AbstractMinecart e = AbstractMinecart.class.cast(this);
+        if (e.isOnRails()) return; // Only search for new rails if the cart is derailed.
+
         BlockPos potentialPos = new BlockPos(k.get(), i.get() - 1, j.get());
         if (!e.level().getBlockState(potentialPos).is(BlockTags.RAILS) && !VSGameUtilsKt.isBlockInShipyard(e.level(), potentialPos)) {
             AABB minecartAABB = new AABB(potentialPos);

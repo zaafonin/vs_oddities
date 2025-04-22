@@ -9,7 +9,6 @@
   "mixins": [
     "biomes.MixinChunkAccess",
     "biomes.MixinServerLevel",
-    "snoop.MixinShipObjectServerWorld",
     "commands.MixinVSCommands",
     "create.content.kinetics.mixer.MixinMechanicalMixerBlock",
     "create.processing.basin.MixinBasinBlockEntity",
@@ -24,12 +23,14 @@
     "sculk.MixinEuclideanGameEventListenerRegistry",
     "sculk.MixinGameEventDispatcher",
     "sculk.MixinVibrationSystem",
-    "snoop.MixinLevelChunk",
-    "treechop.MixinFellTreeResult",
-    "vs2.AccessShipData",
     "shipyard_entities.MixinAbstractMinecart",
     "shipyard_entities.MixinEntity",
-    "shipyard_entities.MixinPrimedTnt"
+    "shipyard_entities.MixinPathfinderMob",
+    "shipyard_entities.MixinPrimedTnt",
+    "snoop.MixinLevelChunk",
+    "snoop.MixinShipObjectServerWorld",
+    "treechop.MixinFellTreeResult",
+    "vs2.AccessShipData"
   ],
   "injectors": {
     "defaultRequire": 1
