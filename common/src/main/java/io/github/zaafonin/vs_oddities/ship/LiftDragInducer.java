@@ -87,7 +87,7 @@ public class LiftDragInducer implements ShipForcesInducer, BlockChangeSnooper, D
         // TODO: Implement positional lift similarly to Pulse from ThrustInducer.
     }
 
-    public static LiftDragInducer getOrCreate(LoadedServerShip ship) {
+    public static LiftDragInducer getOrCreate(ServerShip ship) {
         LiftDragInducer result = ship.getAttachment(LiftDragInducer.class);
         if (result == null) {
             result = new LiftDragInducer();

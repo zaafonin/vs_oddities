@@ -63,7 +63,7 @@ public class OddAttachment implements ShipForcesInducer, DebugPresentable {
     public OddAttachment() {
     }
 
-    public static OddAttachment getOrCreate(LoadedServerShip ship) {
+    public static OddAttachment getOrCreate(ServerShip ship) {
         OddAttachment result = ship.getAttachment(OddAttachment.class);
         if (result == null) {
             result = new OddAttachment();

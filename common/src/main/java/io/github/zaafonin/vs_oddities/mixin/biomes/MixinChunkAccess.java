@@ -45,7 +45,9 @@ public abstract class MixinChunkAccess {
         if (level == null) return;
 
         ChunkPos chunkpos = this.getPos();
-        LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(level, chunkpos);
+        // Using LoadedServerShip here (like one is supposed to when working with attachments) creates a regression.
+        // Possible cause: it's called on newly created ships that are not "loaded" yet. Remedy: use ServerShip.
+        ServerShip ship = VSGameUtilsKt.getShipManagingPos(level, chunkpos);
         if (ship == null) return; // Not on a ship, filling biomes in the regular way.
 
         Vector3i shipyardBase = ship.getChunkClaim().getCenterBlockCoordinates(VSGameUtilsKt.getYRange(level), new Vector3i());

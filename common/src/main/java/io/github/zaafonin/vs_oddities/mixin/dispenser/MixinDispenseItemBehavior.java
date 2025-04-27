@@ -55,6 +55,6 @@ public abstract class MixinDispenseItemBehavior {
         ThrustInducer applier = ThrustInducer.getOrCreate(ship);
         if (!JOMLrecoil.isFinite()) return; // Something went really wrong with our calculations.
 
-        applier.applyPulse(JOMLrecoil, JOMLposInShip, 1, false);
+        applier.applyPulse(JOMLrecoil, null, JOMLposInShip, 1, false);
     }
 }

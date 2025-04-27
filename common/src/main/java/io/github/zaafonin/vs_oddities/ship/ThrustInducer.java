@@ -26,19 +26,21 @@ public class ThrustInducer implements ShipForcesInducer, DebugPresentable {
 
     public class Pulse {
         public Vector3dc force;
+        public Vector3dc torque;
         public Vector3dc pos;
         public int ticks;
         public boolean invariant;
 
-        public Pulse(Vector3dc force, Vector3dc shipRelativePos, int ticks, boolean invariant) {
+        public Pulse(Vector3dc force, Vector3dc torque, Vector3dc shipRelativePos, int ticks, boolean invariant) {
             this.force = force;
+            this.torque = torque;
             this.pos = shipRelativePos;
             this.ticks = ticks;
             this.invariant = invariant;
         }
 
-        public Pulse(Vector3dc force, Vector3dc shipRelativePos, boolean invariant) {
-            this(force, shipRelativePos, 1, invariant);
+        public Pulse(Vector3dc force, Vector3dc torque, Vector3dc shipRelativePos, boolean invariant) {
+            this(force, torque, shipRelativePos, 1, invariant);
         }
     }
     // endregion
@@ -54,9 +56,11 @@ public class ThrustInducer implements ShipForcesInducer, DebugPresentable {
         // Timed pulses
         pulses.forEach(pulse -> {
             if (pulse.invariant) {
-                physShip.applyInvariantForceToPos(pulse.force, pulse.pos);
+                if (pulse.force != null) physShip.applyInvariantForceToPos(pulse.force, pulse.pos);
+                if (pulse.torque != null) physShip.applyInvariantTorque(pulse.torque);
             } else {
-                physShip.applyRotDependentForceToPos(pulse.force, pulse.pos);
+                if (pulse.force != null) physShip.applyRotDependentForceToPos(pulse.force, pulse.pos);
+                if (pulse.torque != null) physShip.applyRotDependentTorque(pulse.torque);
             }
 
             pulse.ticks -= 1;
@@ -86,8 +90,8 @@ public class ThrustInducer implements ShipForcesInducer, DebugPresentable {
      * @param physTicks Duration to apply the force. 1 game tick ≈ 5 physics ticks.
      * TODO: Ditch the ≈ and adapt to a possibly variable tick rate.
      */
-    public void applyPulse(Vector3dc force, Vector3dc shipRelativePos, int physTicks, boolean invariant) {
-        pulses.add(new Pulse(force, shipRelativePos, physTicks, invariant));
+    public void applyPulse(Vector3dc force, Vector3dc torque, Vector3dc shipRelativePos, int physTicks, boolean invariant) {
+        pulses.add(new Pulse(force, torque, shipRelativePos, physTicks, invariant));
     }
     // endregion
 

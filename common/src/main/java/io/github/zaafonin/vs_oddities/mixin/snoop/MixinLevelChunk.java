@@ -34,7 +34,9 @@ public abstract class MixinLevelChunk {
     private void trackOddProperties(BlockPos blockPos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> ci) {
         if (!(level instanceof ServerLevel serverLevel)) return;
 
-        LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, blockPos);
+        // Using ServerShip instead of LoadedServerShip for reasons similar to the biome mixins.
+        // The ship is seemingly not yet loaded when it is just created.
+        ServerShip ship = VSGameUtilsKt.getShipManagingPos(serverLevel, blockPos);
         if (ship == null) return;
 
         BlockState oldBlockState = getBlockState(blockPos);

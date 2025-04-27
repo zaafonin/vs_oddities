@@ -1,0 +1,14 @@
+[
+  {
+    "block": "minecraft:glowstone",
+    "capacity": 2000.0
+  },
+  {
+    "block": "minecraft:end_stone",
+    "capacity": 6000.0
+  },
+  {
+    "block": "minecraft:crying_obsidian",
+    "capacity": 10000.0
+  }
+]

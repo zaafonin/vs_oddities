@@ -11,6 +11,7 @@
     "biomes.MixinServerLevel",
     "commands.MixinVSCommands",
     "create.content.kinetics.mixer.MixinMechanicalMixerBlock",
+    "create.content.kinetics.turntable.MixinTurntableBlockEntity",
     "create.processing.basin.MixinBasinBlockEntity",
     "create.processing.basin.MixinBasinOperatingBlockEntity",
     "create.processing.basin.MixinBasinRecipe",
