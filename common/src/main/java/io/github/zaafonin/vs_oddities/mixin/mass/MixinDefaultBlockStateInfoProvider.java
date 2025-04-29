@@ -23,7 +23,7 @@ public class MixinDefaultBlockStateInfoProvider {
             blockState.getCollisionShape(null, null).forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
                 volume[0] += Math.abs((x2 - x1) * (y2 - y1) * (z2 - z1));
             });
-            return ((double)Math.round(ton * volume[0] * 2)) / 2; // Round to 0.5 kg.
+            return Math.max(0.5, ((double)Math.round(ton * volume[0] * 2)) / 2); // Round to 0.5 kg and handle zero.
         } catch (Exception e) {
             // There might be reasons for this to fail, as we are passing nulls to getCollisionShape.
             // These are out of our control. Defaulting to VS2 behavior.

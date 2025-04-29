@@ -64,13 +64,13 @@ public class LiftDragInducer implements ShipForcesInducer, BlockChangeSnooper, D
                 ),
                 0
         ));
-        // Even more casual: slightly dampen pitch and roll, you probably don't want your airship to do that.
+        // Even more casual: dampen all rotation, airships rarely do that
         // Here easylift blocks don't act to their full force.
         Vector3dc angVel = pv.getOmega();
         physShip.applyInvariantTorque(new Vector3d(
-                blockEasyLift * 10.0 * -angVel.x(),
-                0,
-                blockEasyLift * 10.0 * -angVel.z()
+                Math.min(blockEasyLift * 0.5, antiGravityForce / 10.0 * 3) * -angVel.x(),
+                Math.min(blockEasyLift * 0.5, antiGravityForce / 10.0 * 3) * -angVel.y(),
+                Math.min(blockEasyLift * 0.5, antiGravityForce / 10.0 * 3) * -angVel.z()
         ));
     }
 

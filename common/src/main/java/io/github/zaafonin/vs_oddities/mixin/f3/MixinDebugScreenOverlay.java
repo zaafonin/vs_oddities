@@ -2,6 +2,7 @@ package io.github.zaafonin.vs_oddities.mixin.f3;
 
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.llamalad7.mixinextras.sugar.Local;
+import io.github.zaafonin.vs_oddities.mixin.mass.AccessMassDatapackResolver;
 import io.github.zaafonin.vs_oddities.mixin.vs2.AccessShipData;
 import io.github.zaafonin.vs_oddities.ship.DebugPresentable;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
@@ -9,8 +10,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -25,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.valkyrienskies.core.api.ships.*;
 import org.valkyrienskies.core.impl.game.ships.ShipObjectServer;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
+import org.valkyrienskies.mod.common.config.MassDatapackResolver;
 import org.valkyrienskies.mod.common.util.EntityDraggingInformation;
 import org.valkyrienskies.mod.common.util.IEntityDraggingInformationProvider;
 
@@ -59,6 +64,30 @@ public abstract class MixinDebugScreenOverlay {
                         list.add("Dragged by: " + VSGameUtilsKt.getAllShips(getLevel()).getById(info.getLastShipStoodOn()).getSlug());
                     }
                 }
+            }
+        }
+    }
+
+    @Inject(
+            method = "getSystemInformation",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/stream/Stream;forEach(Ljava/util/function/Consumer;)V",
+                    ordinal = 0 // Also called for picked fluids, not interesting for us.
+            )
+    )
+    private void addVSBlockProperties(CallbackInfoReturnable<List<String>> cir, @Local List<String> list) {
+        if (this.block.getType() == HitResult.Type.BLOCK) {
+            BlockPos blockPos = ((BlockHitResult) this.block).getBlockPos();
+            BlockState blockState = this.minecraft.level.getBlockState(blockPos);
+            Object o = AccessMassDatapackResolver.class.cast(MassDatapackResolver.INSTANCE).getMap().get(BuiltInRegistries.BLOCK.getKey(blockState.getBlock()));
+            if (o != null) {
+                // As good as we can get. VSBlockStateInfo is private class so fields are inaccessible.
+                list.add(String.format(
+                        Locale.ROOT,
+                        "(%s",
+                        o.toString().split("[(]")[1]
+                ));
             }
         }
     }

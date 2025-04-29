@@ -36,6 +36,9 @@ dependencies {
     // Create
     modCompileOnly("com.simibubi.create:create-fabric-${minecraft_version}:${create_fabric_version}")
 
+    // Clockwork
+    modCompileOnly("maven.modrinth:create-clockwork:EvNWNIMY")
+
     // Forge Config API Port
     modApi("maven.modrinth:forge-config-api-port:1aKtMQZE")
 
