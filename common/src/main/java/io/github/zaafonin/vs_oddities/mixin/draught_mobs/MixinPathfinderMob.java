@@ -1,5 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.draught_mobs;
 
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.ship.ThrustInducer;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.world.entity.PathfinderMob;
@@ -25,6 +26,8 @@ public abstract class MixinPathfinderMob {
             )
     )
     void dragShip(PathfinderMob mob, float f) {
+        if (!VSOdditiesConfig.Common.ODDITIES_DRAUGHT_MOBS.get()) return;
+
         // f = Math.max(0, f - 3);
         if (!mob.level().isClientSide) { // VS2 forces can only be applied to server ships.
             Entity leash = mob.getLeashHolder();

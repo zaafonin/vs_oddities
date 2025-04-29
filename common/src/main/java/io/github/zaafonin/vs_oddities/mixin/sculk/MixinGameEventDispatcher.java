@@ -2,6 +2,7 @@ package io.github.zaafonin.vs_oddities.mixin.sculk;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
@@ -36,6 +37,8 @@ public abstract class MixinGameEventDispatcher {
 
     @WrapMethod(method = "post")
     private void visitShipListeners(GameEvent gameEvent, Vec3 vec3, GameEvent.Context context, Operation original) {
+        if (!VSOdditiesConfig.Common.SHIP_AWARE_SCULK.get()) return;
+
         int i = gameEvent.getNotificationRadius();
 
         // Treat on-ship events as in-world events.

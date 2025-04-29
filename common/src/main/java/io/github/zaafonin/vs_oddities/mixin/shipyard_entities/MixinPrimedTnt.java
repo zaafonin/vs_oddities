@@ -1,5 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.shipyard_entities;
 
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import net.minecraft.world.entity.item.PrimedTnt;
 import org.joml.primitives.AABBd;
 import org.joml.primitives.AABBic;
@@ -22,6 +23,8 @@ public abstract class MixinPrimedTnt {
             at = @At("HEAD")
     )
     void leaveShipyard(CallbackInfo ci) {
+        if (!VSOdditiesConfig.Common.SHIP_ENTITIES_LEAVE.get()) return;
+
         Entity e = Entity.class.cast(this);
         Ship ship = VSGameUtilsKt.getShipManaging(e);
         if (ship != null) {

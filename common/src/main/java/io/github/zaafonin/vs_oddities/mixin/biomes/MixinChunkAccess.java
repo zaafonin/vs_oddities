@@ -1,5 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.biomes;
 
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.ship.OddAttachment;
 import net.minecraft.core.QuartPos;
 import net.minecraft.server.level.ServerLevel;
@@ -39,6 +40,8 @@ public abstract class MixinChunkAccess {
 
     @Inject(method = "fillBiomesFromNoise", at = @At("HEAD"), cancellable = true)
     protected void adjustForShip(BiomeResolver resolver, Climate.Sampler sampler, CallbackInfo ci) {
+        if (!VSOdditiesConfig.Common.FIX_BIOME_MISMATCH.get()) return;
+
         // HACK: This shouldn't work. We only get a "Level Height Accessor" but luckily it's a real Level.
         // At least real enough for VS2 methods to work on.
         ServerLevel level = (ServerLevel) levelHeightAccessor;

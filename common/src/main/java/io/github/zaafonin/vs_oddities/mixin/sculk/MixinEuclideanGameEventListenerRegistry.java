@@ -1,5 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.sculk;
 
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.gameevent.*;
 import net.minecraft.world.phys.Vec3;
@@ -20,6 +21,8 @@ import java.util.Optional;
 public abstract class MixinEuclideanGameEventListenerRegistry {
     @Inject(method = "getPostableListenerPosition", at = @At("HEAD"), cancellable = true)
     private static void vsAwareDistance(ServerLevel serverLevel, Vec3 vec3, GameEventListener gameEventListener, CallbackInfoReturnable<Optional<Vec3>> cir) {
+        if (!VSOdditiesConfig.Common.SHIP_AWARE_SCULK.get()) return;
+
         Optional<Vec3> optional = gameEventListener.getListenerSource().getPosition(serverLevel);
         if (optional.isEmpty()) {
             cir.setReturnValue(Optional.empty());

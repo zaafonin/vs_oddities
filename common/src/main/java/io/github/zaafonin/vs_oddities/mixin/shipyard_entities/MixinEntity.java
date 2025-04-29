@@ -22,6 +22,8 @@ public abstract class MixinEntity {
             at = @At("HEAD")
     )
     void leaveShipyard(CallbackInfo ci) {
+        if (!VSOdditiesConfig.Common.SHIP_ENTITIES_LEAVE.get()) return;
+
         Entity e = Entity.class.cast(this);
         Ship ship = VSGameUtilsKt.getShipManaging(e);
         if (ship != null) {

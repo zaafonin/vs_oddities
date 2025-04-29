@@ -3,6 +3,7 @@ package io.github.zaafonin.vs_oddities.mixin.create.processing.basin;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ClipContext;
@@ -38,11 +39,13 @@ public abstract class MixinBasinBlockEntity extends SmartBlockEntity {
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/block/entity/BlockEntityType;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", at = @At("RETURN"), remap = false)
     protected void tickMoreOften(BlockEntityType type, BlockPos pos, BlockState state, CallbackInfo ci) {
-        setLazyTickRate(3); // Update every second.
+        setLazyTickRate(VSOdditiesConfig.Common.SHIP_AWARE_CREATE_PROCESSING_BASIN_LAZY_TICK_RATE.get());
     }
 
     @Inject(method = "lazyTick", at = @At("RETURN"))
     protected void forceUpdate(CallbackInfo ci) {
+        if (!VSOdditiesConfig.Common.SHIP_AWARE_CREATE_PROCESSING.get()) return;
+
         if (!level.isClientSide) {
             notifyUpdate();
             notifyChangeOfContents();
@@ -51,6 +54,8 @@ public abstract class MixinBasinBlockEntity extends SmartBlockEntity {
 
     @Inject(method = "getOperator", at = @At("RETURN"), cancellable = true)
     protected void checkShipBasinCheckers(CallbackInfoReturnable<Optional<BasinOperatingBlockEntity>> cir) {
+        if (!VSOdditiesConfig.Common.SHIP_AWARE_CREATE_PROCESSING.get()) return;
+
         if (cir.getReturnValue().isEmpty()) {
             // If we didn't find a basin operator, account for ship positions by raycasting (duh).
             Ship ownShip = VSGameUtilsKt.getShipManagingPos(level, worldPosition);

@@ -2,6 +2,7 @@ package io.github.zaafonin.vs_oddities.mixin.create.content.kinetics.fan;
 
 import com.simibubi.create.content.kinetics.fan.AirCurrent;
 import com.simibubi.create.content.kinetics.fan.IAirCurrentSource;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.ship.ThrustInducer;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
@@ -54,6 +55,8 @@ public abstract class MixinAirCurrent {
 
     @Inject(method = "findEntities", at = @At("TAIL"))
     public void findEntities(CallbackInfo ci) {
+        if (!VSOdditiesConfig.Common.SHIP_AWARE_CREATE_FANS_AFFECT_SHIPS.get()) return;
+
         // Also find ships.
         Level level = source.getAirCurrentWorld();
         if (level.isClientSide) return;
@@ -63,14 +66,20 @@ public abstract class MixinAirCurrent {
 
     @Inject(method = "tickAffectedEntities", at = @At("TAIL"))
     public void tickAffectedEntities(Level world, CallbackInfo ci) {
+        if (!VSOdditiesConfig.Common.SHIP_AWARE_CREATE_FANS_AFFECT_SHIPS.get()) return;
+
         if (world.isClientSide) return;
         ServerLevel slevel = (ServerLevel)world;
 
         Vec3 raycastStart = source.getAirCurrentPos().getCenter();
         Vec3i v = direction.getNormal();
-        Vec3 raycastEnd = raycastStart;
-        raycastStart.add(new Vec3(v.getX(), v.getY(), v.getZ()).scale(0.5));
-        raycastEnd.add(new Vec3(v.getX(), v.getY(), v.getZ()).scale(maxDistance));
+        Vec3 raycastEnd = new Vec3(raycastStart.x, raycastStart.y, raycastStart.z);
+        Vec3 offsetStart = new Vec3(v.getX(), v.getY(), v.getZ());
+        Vec3 offsetEnd = new Vec3(v.getX(), v.getY(), v.getZ());
+        offsetStart = offsetStart.scale(0.5);
+        offsetEnd = offsetEnd.scale(5);
+        raycastStart = raycastStart.add(offsetStart);
+        raycastEnd = raycastEnd.add(offsetEnd);
 
         BlockHitResult hit = RaycastUtilsKt.clipIncludeShips(world, new ClipContext(
                 raycastStart,
@@ -99,87 +108,29 @@ public abstract class MixinAirCurrent {
                 Vector3d hitShipPos = VectorConversionsMCKt.toJOML(hit.getBlockPos().getCenter());
                 hitShipPos.sub(ship.getTransform().getPositionInShip());
 
+                // For calculating distance between source and hit.
+                Vec3 fanWorldPos = OddUtils.toWorldCoordinates(self, source.getAirCurrentPos().getCenter());
+                Vec3 hitWorldPos = OddUtils.toWorldCoordinates(ship, hit.getBlockPos().getCenter());
+
                 ThrustInducer shipInducer = ThrustInducer.getOrCreate(ship);
 
-                /*
-                Vec3i flow = (pushing ? direction : direction.getOpposite()).getNormal();
+                //Vec3i flow = (pushing ? direction : direction.getOpposite()).getNormal();
                 float speed = Math.abs(source.getSpeed());
-                float acceleration = speed / (float) (worldHitCenter.distance(worldCurrentPos) / maxDistance);
+                float acceleration = speed / (float) (fanWorldPos.distanceTo(hitWorldPos) / maxDistance);
                 float maxAcceleration = 5;
 
                 double suggested = acceleration * 500;
-                double cap = lsship.getInertiaData().getMass() * 25 * maxAcceleration;
+                double cap = ship.getInertiaData().getMass() * 25 * maxAcceleration;
                 double force = Math.min(suggested, cap);
-                if (!lsship.isStatic()) {
-                    inducer.applyPulse(
-                            worldCurrentPos.sub(worldHitCenter, new Vector3d()).normalize(force).mul(pushing ? -1.0 : 1.0),
-                            null, shipHitCenter, 3, true
+                if (!ship.isStatic()) {
+                    shipInducer.applyPulse(
+                            VectorConversionsMCKt.toJOML(
+                                hitWorldPos.subtract(fanWorldPos).normalize().scale(force * (pushing ? 1.0 : -1.0))
+                            ),
+                            null, hitShipPos, 3, true
                     );
-                }*/
-            }
-        }
-
-        /*
-        ServerShip fanShip = VSGameUtilsKt.getShipManagingPos((ServerLevel)world, source.getAirCurrentPos());
-        Vector3d fanCenter = VectorConversionsMCKt.toJOML(source.getAirCurrentPos().getCenter());
-        Vector3dc worldCurrentPos = VSGameUtilsKt.getWorldCoordinates(world, source.getAirCurrentPos(), fanCenter);
-        AABBd worldBounds = VectorConversionsMCKt.toJOML(bounds);
-        if (fanShip != null) {
-            worldBounds.transform(fanShip.getTransform().getShipToWorld());
-        }
-
-        // Apply forces to ships.
-        vs_oddities$caughtShips.forEach(ship -> {
-            // Only safe because we skip the ship check on client.
-            ServerShip sship = (ServerShip)ship;
-            AABBd worldIntersection = sship.getWorldAABB().intersection(worldBounds, new AABBd());
-            Vector3dc worldIntersectionCenter = worldIntersection.center(new Vector3d());
-
-            if (!worldIntersectionCenter.isFinite()) return;
-
-            System.out.printf("Intersecting %s, center: %s\n", sship.getSlug(), worldIntersectionCenter.toString());
-
-            Ship self = VSGameUtilsKt.getShipManagingPos(world, source.getAirCurrentPos());
-
-            Vector3d worldRaycastStart = worldCurrentPos.add(worldIntersectionCenter.sub(worldCurrentPos, new Vector3d()).normalize(0.5), new Vector3d());
-            Vector3d worldRaycastEnd = worldIntersectionCenter.add(worldIntersectionCenter.sub(worldCurrentPos, new Vector3d()).normalize(1), new Vector3d());
-            BlockHitResult hit = RaycastUtilsKt.clipIncludeShips(world, new ClipContext(
-                    VectorConversionsMCKt.toMinecraft(worldRaycastStart),
-                    VectorConversionsMCKt.toMinecraft(worldRaycastEnd),
-                    ClipContext.Block.COLLIDER,
-                    ClipContext.Fluid.NONE,
-                    null
-            ), false, (self != null ? self.getId() : null));
-
-            if (hit.getType() == HitResult.Type.BLOCK) {
-                System.out.printf("Successful raycast to %s", hit.getBlockPos().toString());
-                Vector3d shipyardHitCenter = VectorConversionsMCKt.toJOML(hit.getBlockPos().getCenter());
-                Vector3dc worldHitCenter = VSGameUtilsKt.getWorldCoordinates(world, hit.getBlockPos(), shipyardHitCenter);
-                Vector3d shipHitCenter = VectorConversionsMCKt.toJOML(hit.getBlockPos().getCenter());
-                shipHitCenter.sub(sship.getTransform().getPositionInShip());
-
-                LoadedServerShip lsship = VSGameUtilsKt.getShipObjectManagingPos((ServerLevel)world, hit.getBlockPos());
-                if (lsship != null) {
-                    if (lsship.getId() != ship.getId()) return;
-
-                    ThrustInducer inducer = ThrustInducer.getOrCreate(lsship);
-
-                    Vec3i flow = (pushing ? direction : direction.getOpposite()).getNormal();
-                    float speed = Math.abs(source.getSpeed());
-                    float acceleration = speed / (float) (worldHitCenter.distance(worldCurrentPos) / maxDistance);
-                    float maxAcceleration = 5;
-
-                    double suggested = acceleration * 500;
-                    double cap = lsship.getInertiaData().getMass() * 25 * maxAcceleration;
-                    double force = Math.min(suggested, cap);
-                    if (!lsship.isStatic()) {
-                        inducer.applyPulse(
-                                worldCurrentPos.sub(worldHitCenter, new Vector3d()).normalize(force).mul(pushing ? -1.0 : 1.0),
-                                null, shipHitCenter, 3, true
-                        );
-                    }
                 }
             }
-        });*/
+        }
     }
 }

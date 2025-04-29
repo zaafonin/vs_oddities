@@ -1,5 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.dispenser;
 
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.ship.ThrustInducer;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -33,6 +34,8 @@ import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 public abstract class MixinDispenseItemBehavior {
     @Inject(method = "execute(Lnet/minecraft/core/BlockSource;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/ItemStack;", at = @At("HEAD"))
     private void addRecoil(BlockSource blockSource, ItemStack itemStack, CallbackInfoReturnable<ItemStack> ci) {
+        if (!VSOdditiesConfig.Common.ODDITIES_DISPENSER_RECOIL.get()) return;
+
         ServerLevel level = blockSource.getLevel();
         Position position = DispenserBlock.getDispensePosition(blockSource);
         Direction direction = blockSource.getBlockState().getValue(DispenserBlock.FACING);

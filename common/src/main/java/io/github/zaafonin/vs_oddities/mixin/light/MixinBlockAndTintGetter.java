@@ -1,5 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.light;
 
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.ship.OddAttachment;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
@@ -35,6 +36,8 @@ public interface MixinBlockAndTintGetter {
 
     @Inject(method = "getBrightness", at = @At("HEAD"), cancellable = true)
     default void applyWorldBrightness(LightLayer lightType, BlockPos blockPos, CallbackInfoReturnable<Integer> ci) {
+        if (!VSOdditiesConfig.Common.FIX_SHIP_LIGHTING.get()) return;
+
         // Cursed.
         Level level = null;
         if (this instanceof Level) {

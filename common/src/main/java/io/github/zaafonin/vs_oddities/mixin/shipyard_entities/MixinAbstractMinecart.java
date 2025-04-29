@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
@@ -43,6 +44,8 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
             @Local(ordinal = 1) LocalIntRef i,
             @Local(ordinal = 2) LocalIntRef j
     ) {
+        if (!VSOdditiesConfig.Common.SHIP_MINECARTS_SNAP.get()) return;
+
         if (lastShipCooldown > 0) {
             lastShipCooldown--;
         } else {
@@ -94,7 +97,7 @@ public abstract class MixinAbstractMinecart extends MixinEntity {
             double d, double e, double f, float g, float h, int i, boolean bl, Operation<Void> original
     ) {
         Entity en = Entity.class.cast(this);
-        if (VSGameUtilsKt.getShipManagingPos(en.level(), en.position()) != VSGameUtilsKt.getShipManagingPos(en.level(), d, e, f)) {
+        if (VSOdditiesConfig.Common.SHIP_MINECARTS_SNAP.get() && (VSGameUtilsKt.getShipManagingPos(en.level(), en.position()) != VSGameUtilsKt.getShipManagingPos(en.level(), d, e, f))) {
             en.setPos(d, e, f);
             original.call(d, e, f, g, h, -1, bl);
         } else {

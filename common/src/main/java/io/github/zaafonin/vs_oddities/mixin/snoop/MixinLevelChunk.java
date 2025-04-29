@@ -1,6 +1,11 @@
 package io.github.zaafonin.vs_oddities.mixin.snoop;
 
+import com.google.common.collect.MutableClassToInstanceMap;
+import io.github.zaafonin.vs_oddities.mixin.vs2.AccessShipData;
+import io.github.zaafonin.vs_oddities.ship.BlockChangeSnooper;
+import io.github.zaafonin.vs_oddities.ship.DebugPresentable;
 import io.github.zaafonin.vs_oddities.ship.LiftDragInducer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +23,7 @@ import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.apigame.world.chunks.BlockType;
+import org.valkyrienskies.core.impl.game.ships.ShipObjectServer;
 import org.valkyrienskies.core.impl.game.ships.ShipObjectWorld;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
@@ -40,6 +46,13 @@ public abstract class MixinLevelChunk {
         if (ship == null) return;
 
         BlockState oldBlockState = getBlockState(blockPos);
+
         LiftDragInducer.getOrCreate(ship).onSetBlockState(serverLevel, blockPos, oldBlockState, blockState);
+        /*MutableClassToInstanceMap<?> attachments = ((AccessShipData)ship).getPersistentAttachedData();
+        attachments.forEach((k, v) -> {
+            if (v instanceof BlockChangeSnooper) {
+                ((BlockChangeSnooper) v).onSetBlockState(serverLevel, blockPos, oldBlockState, blockState);
+            }
+        });*/
     }
 }

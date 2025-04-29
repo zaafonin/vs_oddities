@@ -5,6 +5,7 @@ import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlock;
 import com.simibubi.create.content.kinetics.turntable.TurntableBlockEntity;
 import ht.treechop.server.Server;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.ship.ThrustInducer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -38,6 +39,8 @@ import java.util.Iterator;
 public abstract class MixinTurntableBlockEntity extends KineticBlockEntity {
     @Override
     public void tick() {
+        if (!VSOdditiesConfig.Common.SHIP_AWARE_CREATE_TURNTABLES_ROTATE_SHIPS.get()) return;
+
         // Basin mixin tries to raycast a mechanical mixer and fails. Basins themselves have a shape just for raycasts.
         super.tick();
         if (level.isClientSide) return;

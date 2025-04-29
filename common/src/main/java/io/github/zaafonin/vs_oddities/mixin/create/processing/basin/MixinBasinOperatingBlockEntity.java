@@ -2,6 +2,7 @@ package io.github.zaafonin.vs_oddities.mixin.create.processing.basin;
 
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinOperatingBlockEntity;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ClipContext;
@@ -31,6 +32,8 @@ import java.util.Optional;
 public abstract class MixinBasinOperatingBlockEntity extends BlockEntity {
     @Inject(method = "getBasin", at = @At("RETURN"), cancellable = true, remap = false)
     protected void checkShipBasins(CallbackInfoReturnable<Optional<BasinBlockEntity>> cir) {
+        if (!VSOdditiesConfig.Common.SHIP_AWARE_CREATE_PROCESSING.get()) return;
+
         if (cir.getReturnValue().isEmpty()) {
             // If we didn't find a basin, account for ship positions by raycasting (duh).
             // TODO: Remember position (and ship) of the found basin and only check if it's still below us.

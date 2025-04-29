@@ -9,17 +9,28 @@ The wacky wonky little brother of [VS Addition by xiewuzhiying.](https://github.
 The addon is still in its early development and has several known and most probably some unknown bugs. I will provide .jar files once I consider the mod stable enough to play it with existing worlds.
 
 ## Features:
-- Newly created ships retain the biome they were created in. No more mismatch of grass colors!
+- Various bug fixes:
+- - Newly created ships retain the biome they were created in. No more mismatch of grass colors!
+- - World weather applies to ships correctly. Snow's falling around? It will pile up on your ship as well.
+- - Lighting on ships accounts for lights in the world around them. Ships parked in dark areas will be dark as well.
+- - Vanilla sculk now works both in world and on ships. This also applies to [Echo Chest](https://github.com/Fuzss/echochest), helping you to collect items around you while being on a ship.
+- - Better handling of entities tied to ships (minecarts, leashes, etc.)
+- - Sensible default masses for blocks without a defined weight; no more 1000 kg slabs, panes and trapdoors.
+- More integration with [Create](https://github.com/Creators-of-Create/Create):
+- - Blaze burners, basins, mixers interact with each other even on different ships.
+- - Blowing air on ships using encased fans propels them.
+- - Ships spin on top of spinning turntables.
+- Custom features:
+- - When [HT's Treechop](https://modrinth.com/mod/treechop) is installed, felling a tree "shipifies" it. This is useful for bringing a new VS2 ship into existence without any helms, wands and assemblers.
+- - Fireworks and other projectiles add noticeable recoil when shot from dispensers. This allows for a makeshift thruster using only vanilla blocks and items.
+- - Ships can be dragged around by mobs leashed to them.
+- - Some blocks have a mysterious property of negating gravity. Build floating islands without worrying about thrust!
+- Quality of life for other VS2 tinkerers:
+- - Info about VS2 ships (mass, velocity, attachments, etc.) all in the F3 menu.
+- - Two new commands:
+- - - `/vs break` destroys all blocks of a ship as if they were broken naturally (enabling drops)
+- - - `/vs dry` removes all water of a ship, including kelp and seagrass. Waterlogged blocks are also handled correctly.
 
-- Two new commands: 
-  - `/vs break` destroys all blocks of a ship as if they were broken naturally (enabling drops)
-  - `/vs dry` removes all water of a ship, including kelp and seagrass. Waterlogged blocks are also handled correctly.
-- Mixers, basins and blaze burners from [Create](https://github.com/Creators-of-Create/Create) interact with each other even on different ships.
-- Fireworks and other projectiles add noticeable recoil when shot from dispensers. This allows for a makeshift thruster using only vanilla blocks and items.
-- Vanilla sculk now works both in world and on ships. This also applies to [Echo Chest](https://github.com/Fuzss/echochest), helping you to collect items around you while being on a ship.
-- Info about VS2 ships (mass, velocity, attachments, etc.) all in the F3 menu.
-- Automatically calculating sensible default masses for blocks without a defined weight; no more 1000 kg slabs, panes and trapdoors.
-- When [HT's Treechop](https://modrinth.com/mod/treechop) is installed, felling a tree "shipifies" it. This is useful for bringing a new VS2 ship into existence without any helms, wands and assemblers.
 
 The feature set will be expanded and polished. If you need compat with a specific mod, open a GitHub issue or contact me on the [Valkyrien Skies Discord](https://discord.com/invite/dWwM8G3), you'll find me as @zaafonin. I'll try to come up with some solution if it's feasible for me.
 

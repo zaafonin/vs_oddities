@@ -10,6 +10,7 @@ import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.crafting.Recipe;
@@ -53,6 +54,8 @@ public abstract class MixinBasinRecipe extends ProcessingRecipe<SmartInventory> 
             BasinBlockEntity basin, Recipe<?> recipe, boolean test, CallbackInfoReturnable<Boolean> cir,
             @Local LocalRef<BlazeBurnerBlock.HeatLevel> heat
     ) {
+        if (!VSOdditiesConfig.Common.SHIP_AWARE_CREATE_PROCESSING.get()) return;
+
         if (heat.get() == BlazeBurnerBlock.HeatLevel.NONE) {
             // Perform the raycast.
             Level level = basin.getLevel();

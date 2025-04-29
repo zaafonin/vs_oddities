@@ -1,5 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.shipyard_entities;
 
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
@@ -23,6 +24,8 @@ public abstract class MixinPathfinderMob {
     )
     BlockPos worldAwareRestrictPos(Entity entity) {
         BlockPos entityBlockPos = entity.blockPosition();
+        if (!VSOdditiesConfig.Common.FIX_SHIP_LEASHING.get()) return entityBlockPos;
+
         Ship shipThis = VSGameUtilsKt.getShipManaging(Entity.class.cast(this));
         Ship shipOther = VSGameUtilsKt.getShipManaging(entity);
         if (shipThis != shipOther) {
@@ -41,6 +44,8 @@ public abstract class MixinPathfinderMob {
             )
     )
     float worldAwareDistanceTo(PathfinderMob instance, Entity entity) {
+        if (!VSOdditiesConfig.Common.FIX_SHIP_LEASHING.get()) return instance.distanceTo(entity);
+
         return (float)
                 VSGameUtilsKt.toWorldCoordinates(instance.level(), instance.position())
                 .distanceTo(
@@ -57,7 +62,7 @@ public abstract class MixinPathfinderMob {
             )
     )
     double worldAwareLeashX(Entity instance) {
-        if (instance != Entity.class.cast(this)) {
+        if (VSOdditiesConfig.Common.FIX_SHIP_LEASHING.get() && (instance != Entity.class.cast(this))) {
             return VSGameUtilsKt.toWorldCoordinates(instance.level(), instance.position()).x;
         }
         return instance.getX();
@@ -72,7 +77,7 @@ public abstract class MixinPathfinderMob {
             )
     )
     double worldAwareLeashY(Entity instance) {
-        if (instance != Entity.class.cast(this)) {
+        if (VSOdditiesConfig.Common.FIX_SHIP_LEASHING.get() && (instance != Entity.class.cast(this))) {
             return VSGameUtilsKt.toWorldCoordinates(instance.level(), instance.position()).y;
         }
         return instance.getY();
@@ -87,7 +92,7 @@ public abstract class MixinPathfinderMob {
             )
     )
     double worldAwareLeashZ(Entity instance) {
-        if (instance != Entity.class.cast(this)) {
+        if (VSOdditiesConfig.Common.FIX_SHIP_LEASHING.get() && (instance != Entity.class.cast(this))) {
             return VSGameUtilsKt.toWorldCoordinates(instance.level(), instance.position()).z;
         }
         return instance.getZ();

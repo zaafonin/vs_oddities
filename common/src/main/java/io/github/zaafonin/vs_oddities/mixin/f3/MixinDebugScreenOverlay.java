@@ -2,6 +2,7 @@ package io.github.zaafonin.vs_oddities.mixin.f3;
 
 import com.google.common.collect.MutableClassToInstanceMap;
 import com.llamalad7.mixinextras.sugar.Local;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.mixin.mass.AccessMassDatapackResolver;
 import io.github.zaafonin.vs_oddities.mixin.vs2.AccessShipData;
 import io.github.zaafonin.vs_oddities.ship.DebugPresentable;
@@ -48,12 +49,16 @@ public abstract class MixinDebugScreenOverlay {
 
     @Inject(method = "getGameInformation", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 1))
     private void addShipCountInformation(CallbackInfoReturnable<List<String>> cir, @Local List<String> list) {
+        if (!VSOdditiesConfig.Client.UTILS_DEBUG_OVERLAY.get()) return;
+
         QueryableShipData<Ship> ships = VSGameUtilsKt.getAllShips(getLevel());
         list.add("Ships: " + ships.size());
     }
 
     @Inject(method = "getGameInformation", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 6, shift = At.Shift.AFTER))
     private void addPlayerDraggingInformation(CallbackInfoReturnable<List<String>> cir, @Local List<String> list) {
+        if (!VSOdditiesConfig.Client.UTILS_DEBUG_OVERLAY.get()) return;
+
         EntityDraggingInformation info = ((IEntityDraggingInformationProvider)minecraft.player).getDraggingInformation();
         if (info != null) {
             if (info.isEntityBeingDraggedByAShip()) {
@@ -77,6 +82,8 @@ public abstract class MixinDebugScreenOverlay {
             )
     )
     private void addVSBlockProperties(CallbackInfoReturnable<List<String>> cir, @Local List<String> list) {
+        if (!VSOdditiesConfig.Client.UTILS_DEBUG_OVERLAY.get()) return;
+
         if (this.block.getType() == HitResult.Type.BLOCK) {
             BlockPos blockPos = ((BlockHitResult) this.block).getBlockPos();
             BlockState blockState = this.minecraft.level.getBlockState(blockPos);
@@ -94,6 +101,8 @@ public abstract class MixinDebugScreenOverlay {
 
     @Inject(method = "getSystemInformation", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
     private void addShipInformation(CallbackInfoReturnable<List<String>> cir, @Local List<String> list) {
+        if (!VSOdditiesConfig.Client.UTILS_DEBUG_OVERLAY.get()) return;
+
         Level l = getLevel();
         BlockPos blockPos = ((BlockHitResult) this.block).getBlockPos();
         Ship ship = VSGameUtilsKt.getShipManagingPos(l, blockPos);

@@ -5,6 +5,7 @@ import ht.treechop.common.block.ChoppedLogBlock;
 import ht.treechop.common.chop.Chop;
 import ht.treechop.common.chop.FellDataImpl;
 import ht.treechop.common.chop.FellTreeResult;
+import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,6 +44,8 @@ public abstract class MixinFellTreeResult {
             cancellable = true
     )
     private void shipify(BlockPos targetPos, ServerPlayer player, ItemStack tool, CallbackInfo ci) {
+        if (!VSOdditiesConfig.Common.ODDITIES_TREECHOP_SHIPIFY.get()) return;
+
         Ship s = VSGameUtilsKt.getShipManagingPos(level, targetPos);
         if (s == null) {
             // This could be accessed like a local but do I really care?
