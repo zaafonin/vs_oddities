@@ -29,6 +29,7 @@ public class VSOdditiesConfig {
         public static final ForgeConfigSpec.BooleanValue ODDITIES_DRAUGHT_MOBS;
         public static final ForgeConfigSpec.BooleanValue ODDITIES_FLOATSTONE_PROPERTIES;
         public static final ForgeConfigSpec.BooleanValue ODDITIES_TREECHOP_SHIPIFY;
+        public static final ForgeConfigSpec.BooleanValue ODDITIES_TREECHOP_SHIPIFY_MORE;
 
         // Utility
         public static final ForgeConfigSpec.BooleanValue UTILS_VS_BREAK;
@@ -101,6 +102,9 @@ public class VSOdditiesConfig {
                 ODDITIES_TREECHOP_SHIPIFY = builder
                         .comment("Felling a tree with HT's TreeChop shipfies it.")
                         .define("OdditiesTreeChopShipify", true);
+                ODDITIES_TREECHOP_SHIPIFY_MORE = builder
+                        .comment("Trees felled on ships split off as new ships.")
+                        .define("OdditiesTreeChopShipifyMore", false);
 
                 builder.pop();
             }

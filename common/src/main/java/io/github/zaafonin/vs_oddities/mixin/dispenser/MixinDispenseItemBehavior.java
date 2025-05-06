@@ -2,22 +2,20 @@ package io.github.zaafonin.vs_oddities.mixin.dispenser;
 
 import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.ship.ThrustInducer;
+import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
-import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
@@ -52,7 +50,7 @@ public abstract class MixinDispenseItemBehavior {
 
         if (recoilFactor == 0) return; // Don't apply zero forces.
 
-        Vector3d JOMLposInShip = VectorConversionsMCKt.toJOML(position).sub(ship.getTransform().getPositionInShip());
+        Vector3dc JOMLposInShip = OddUtils.toShipCoordinates(ship, position);
         Vector3dc JOMLrecoil = VectorConversionsMCKt.toJOMLD(direction.getNormal()).mul(-recoilFactor);
 
         ThrustInducer applier = ThrustInducer.getOrCreate(ship);

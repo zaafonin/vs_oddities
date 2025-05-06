@@ -2,15 +2,12 @@ package io.github.zaafonin.vs_oddities.mixin.draught_mobs;
 
 import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.ship.ThrustInducer;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-
-import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
@@ -54,6 +51,8 @@ public abstract class MixinPathfinderMob {
                 ThrustInducer applier = ThrustInducer.getOrCreate(ship);
                 if (!JOMLforce.isFinite()) return; // Something went really wrong with our calculations.
 
+                // NB: Ship mass can change while the pulse is happening. This can accelerate a ship too much when blocks are removed.
+                // Possibly abusable ;)
                 applier.applyPulse(JOMLforce, null, JOMLposInShip, 3, true);
             }
         }

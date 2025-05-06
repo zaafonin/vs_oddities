@@ -5,35 +5,28 @@ import com.simibubi.create.content.kinetics.fan.IAirCurrentSource;
 import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.ship.ThrustInducer;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
-import org.joml.primitives.AABBd;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 import org.valkyrienskies.mod.common.world.RaycastUtilsKt;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Pseudo
 @Mixin(value = AirCurrent.class, remap = false)
@@ -77,36 +70,40 @@ public abstract class MixinAirCurrent {
         Vec3 offsetStart = new Vec3(v.getX(), v.getY(), v.getZ());
         Vec3 offsetEnd = new Vec3(v.getX(), v.getY(), v.getZ());
         offsetStart = offsetStart.scale(0.5);
-        offsetEnd = offsetEnd.scale(5);
+        offsetEnd = offsetEnd.scale(Math.max(maxDistance, 5));
         raycastStart = raycastStart.add(offsetStart);
         raycastEnd = raycastEnd.add(offsetEnd);
 
+        LoadedServerShip self = VSGameUtilsKt.getShipObjectManagingPos(slevel, source.getAirCurrentPos());
         BlockHitResult hit = RaycastUtilsKt.clipIncludeShips(world, new ClipContext(
-                raycastStart,
-                raycastEnd,
+                OddUtils.toWorldCoordinates(self, raycastStart),
+                OddUtils.toWorldCoordinates(self, raycastEnd),
                 ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.NONE,
                 null
-        ), false, null);
+        ), false, (self != null ? self.getId() : null));
 
         if (hit.getType() == HitResult.Type.BLOCK) {
-            LoadedServerShip self = VSGameUtilsKt.getShipObjectManagingPos(slevel, source.getAirCurrentPos());
             LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(slevel, hit.getBlockPos());
 
-            if (ship != null) {
-                if (self != null) {
-                    if (ship.getId() == self.getId()) {
-                        // Do not act if we are blowing ourselves.
-                        return;
-                    }
-                    Vector3d fanShipPos = VectorConversionsMCKt.toJOML(source.getAirCurrentPos().getCenter());
-                    fanShipPos.sub(self.getTransform().getPositionInShip());
-
-                    // TODO: Thrust self if Clockwork is not installed.
-                    ThrustInducer selfInducer = ThrustInducer.getOrCreate(self);
+            // Affect own ship.
+            if (self != null) {
+                if (ship.getId() == self.getId()) {
+                    // Do not act if we are blowing ourselves.
+                    return;
                 }
-                Vector3d hitShipPos = VectorConversionsMCKt.toJOML(hit.getBlockPos().getCenter());
-                hitShipPos.sub(ship.getTransform().getPositionInShip());
+                Vector3d fanShipPos = VectorConversionsMCKt.toJOML(source.getAirCurrentPos().getCenter());
+                fanShipPos.sub(self.getTransform().getPositionInShip());
+
+                // TODO: Thrust self if Clockwork is not installed.
+                ThrustInducer selfInducer = ThrustInducer.getOrCreate(self);
+
+                // Each fan applies a fixed amount of thrust (in newtons).
+                
+            }
+            // Affect targeted ship.
+            if (ship != null) {
+                Vector3dc hitShipPos = OddUtils.toShipCoordinates(ship, hit.getBlockPos().getCenter());
 
                 // For calculating distance between source and hit.
                 Vec3 fanWorldPos = OddUtils.toWorldCoordinates(self, source.getAirCurrentPos().getCenter());
@@ -114,12 +111,12 @@ public abstract class MixinAirCurrent {
 
                 ThrustInducer shipInducer = ThrustInducer.getOrCreate(ship);
 
-                //Vec3i flow = (pushing ? direction : direction.getOpposite()).getNormal();
                 float speed = Math.abs(source.getSpeed());
                 float acceleration = speed / (float) (fanWorldPos.distanceTo(hitWorldPos) / maxDistance);
                 float maxAcceleration = 5;
 
-                double suggested = acceleration * 500;
+                // TODO: Configurable force.
+                double suggested = acceleration * 250;
                 double cap = ship.getInertiaData().getMass() * 25 * maxAcceleration;
                 double force = Math.min(suggested, cap);
                 if (!ship.isStatic()) {

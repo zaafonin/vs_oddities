@@ -10,6 +10,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
+import org.joml.primitives.AABBd;
 import org.joml.primitives.AABBic;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
@@ -69,6 +70,32 @@ public abstract class OddUtils {
     public static Vec3 toWorldCoordinates(Ship ship, Vec3 pos) {
         if (ship == null) return pos;
         return VSGameUtilsKt.toWorldCoordinates(ship, pos);
+    }
+
+    /**
+     * Transform a world or shipyard position to its position relative to the center of the ship.
+     * <p>
+     * Commonly used when applying physical forces at a set position of a ship.
+     * @param {@link Ship}
+     * @param {@link Vec3} pos in world or ship coordinates
+     * @return
+     */
+    public static Vector3dc toShipCoordinates(Ship ship, Vec3 pos) {
+        int blockXStart = ship.getChunkClaim().getXStart() << 4;
+        int blockXEnd = ship.getChunkClaim().getXEnd() << 4 + 15;
+        int blockZStart = ship.getChunkClaim().getZStart() << 4;
+        int blockZEnd = ship.getChunkClaim().getZEnd() << 4 + 15;
+        AABBd shipyard = new AABBd(blockXStart, Integer.MIN_VALUE, blockZStart, blockXEnd, Integer.MAX_VALUE, blockZEnd);
+
+        if (shipyard.containsPoint(pos.x, pos.y, pos.z)) {
+            // TODO: Transform world position to shipyard of the ship.
+            return null;
+        }
+        return VectorConversionsMCKt.toJOML(pos).sub(ship.getTransform().getPositionInShip());
+    }
+
+    public static Vector3dc toShipCoordinates(Ship ship, Position pos) {
+        return toShipCoordinates(ship, new Vec3(pos.x(), pos.y(), pos.z()));
     }
 
     /**

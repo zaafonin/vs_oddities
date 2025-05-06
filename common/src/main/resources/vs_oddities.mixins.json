@@ -34,7 +34,9 @@
     "snoop.MixinLevelChunk",
     "snoop.MixinShipObjectServerWorld",
     "treechop.MixinFellTreeResult",
-    "vs2.AccessShipData"
+    "vs2.AccessShipData",
+    "vs2.MixinServerShipWorldCore",
+    "vs2.MixinShipObjectServerWorld"
   ],
   "injectors": {
     "defaultRequire": 1

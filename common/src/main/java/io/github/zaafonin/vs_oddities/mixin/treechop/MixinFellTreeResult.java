@@ -2,7 +2,6 @@ package io.github.zaafonin.vs_oddities.mixin.treechop;
 
 import ht.treechop.api.TreeData;
 import ht.treechop.common.block.ChoppedLogBlock;
-import ht.treechop.common.chop.Chop;
 import ht.treechop.common.chop.FellDataImpl;
 import ht.treechop.common.chop.FellTreeResult;
 import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
@@ -12,7 +11,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,8 +22,6 @@ import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.util.datastructures.DenseBlockPosSet;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.assembly.ShipAssemblyKt;
-
-import java.util.Collection;
 
 @Pseudo
 @Mixin(value = FellTreeResult.class, remap = false)
@@ -47,7 +47,7 @@ public abstract class MixinFellTreeResult {
         if (!VSOdditiesConfig.Common.ODDITIES_TREECHOP_SHIPIFY.get()) return;
 
         Ship s = VSGameUtilsKt.getShipManagingPos(level, targetPos);
-        if (s == null) {
+        if (s == null || VSOdditiesConfig.Common.ODDITIES_TREECHOP_SHIPIFY_MORE.get()) {
             // This could be accessed like a local but do I really care?
             GameType gameType = player.gameMode.getGameModeForPlayer();
 
@@ -55,7 +55,8 @@ public abstract class MixinFellTreeResult {
             TreeData tree = fellData.getTree();
             tree.streamLogs()
                     .filter(pos -> !pos.equals(targetPos) && !player.blockActionRestricted(level, pos, gameType))
-                    .filter(pos -> !(level.getBlockState(pos).getBlock() instanceof ChoppedLogBlock)) // Heavily suboptimal.
+                    // instanceof looks somewhat suboptimal. Need it so that stumps stay in world as rest of the tree is shipified.
+                    .filter(pos -> !(level.getBlockState(pos).getBlock() instanceof ChoppedLogBlock))
                     .forEach(pos -> {
                         blocks.add(pos.getX(), pos.getY(), pos.getZ());
                     });
@@ -67,8 +68,6 @@ public abstract class MixinFellTreeResult {
 
             ShipAssemblyKt.createNewShipWithBlocks(targetPos, blocks, (ServerLevel) level);
             ci.cancel();
-        } else {
-            // TODO: Make a config already! Here will be the "tree on ship" counterpart.
         }
     }
 }

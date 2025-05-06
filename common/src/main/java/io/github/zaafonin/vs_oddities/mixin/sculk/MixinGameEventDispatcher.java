@@ -13,16 +13,11 @@ import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.gameevent.GameEventListenerRegistry;
 import net.minecraft.world.phys.Vec3;
 import org.joml.primitives.AABBd;
-import org.joml.primitives.AABBdc;
 import org.joml.primitives.AABBic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
-import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +77,7 @@ public abstract class MixinGameEventDispatcher {
 
                     // Copy-paste of original code, except we iterate through ship chunks
 
-                    List<GameEvent.ListenerInfo> list = new ArrayList();
+                    List<GameEvent.ListenerInfo> list = new ArrayList<>();
                     GameEventListenerRegistry.ListenerVisitor listenerVisitor = (gameEventListener, vec32) -> {
                         if (gameEventListener.getDeliveryMode() == GameEventListener.DeliveryMode.BY_DISTANCE) {
                             list.add(new GameEvent.ListenerInfo(gameEvent, finalVec, context, gameEventListener, vec32));
