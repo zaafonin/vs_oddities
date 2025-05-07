@@ -1,14 +1,13 @@
 package io.github.zaafonin.vs_oddities.mixin.shipyard_entities;
 
 import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import org.joml.primitives.AABBd;
 import org.joml.primitives.AABBic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-
-import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;

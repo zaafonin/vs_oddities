@@ -5,7 +5,6 @@ import me.fallenbreath.conditionalmixin.api.mixin.ConditionTester;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.Map;
 
 public class VSOdditiesForgeConfigConditionTester implements ConditionTester

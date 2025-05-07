@@ -3,12 +3,9 @@ package io.github.zaafonin.vs_oddities.mixin.mass;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
-import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.valkyrienskies.mod.common.DefaultBlockStateInfoProvider;
-import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 @Mixin(DefaultBlockStateInfoProvider.class)
 public class MixinDefaultBlockStateInfoProvider {

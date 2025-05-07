@@ -9,6 +9,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.commands.DryCommand;
+import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -23,9 +24,8 @@ import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.mod.common.command.ShipArgument;
 import org.valkyrienskies.mod.common.command.VSCommands;
 import org.valkyrienskies.mod.mixinducks.feature.command.VSCommandSource;
-import io.github.zaafonin.vs_oddities.util.OddUtils;
 
-import java.util.*;
+import java.util.Set;
 
 @Mixin(value = VSCommands.class, remap = false)
 public abstract class MixinVSCommands {

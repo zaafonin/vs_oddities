@@ -1,12 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.snoop;
 
-import com.google.common.collect.MutableClassToInstanceMap;
-import io.github.zaafonin.vs_oddities.mixin.vs2.AccessShipData;
-import io.github.zaafonin.vs_oddities.ship.BlockChangeSnooper;
-import io.github.zaafonin.vs_oddities.ship.DebugPresentable;
 import io.github.zaafonin.vs_oddities.ship.LiftDragInducer;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -17,14 +11,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.ServerShip;
-import org.valkyrienskies.core.api.ships.Ship;
-import org.valkyrienskies.core.apigame.world.chunks.BlockType;
-import org.valkyrienskies.core.impl.game.ships.ShipObjectServer;
-import org.valkyrienskies.core.impl.game.ships.ShipObjectWorld;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 @Mixin(LevelChunk.class)

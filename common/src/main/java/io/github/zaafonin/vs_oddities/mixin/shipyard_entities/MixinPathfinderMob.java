@@ -3,11 +3,10 @@ package io.github.zaafonin.vs_oddities.mixin.shipyard_entities;
 import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-
-import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;

@@ -1,33 +1,22 @@
 package io.github.zaafonin.vs_oddities.mixin.light;
 
 import io.github.zaafonin.vs_oddities.VSOdditiesConfig;
-import io.github.zaafonin.vs_oddities.ship.OddAttachment;
 import io.github.zaafonin.vs_oddities.util.OddUtils;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.QuartPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.biome.BiomeResolver;
-import net.minecraft.world.level.biome.Climate;
-import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.LevelChunkSection;
-import net.minecraft.world.level.chunk.ProtoChunk;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import org.joml.Vector3d;
-import org.joml.Vector3i;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import org.valkyrienskies.mod.common.util.VectorConversionsMCKt;
-import org.valkyrienskies.mod.mixin.accessors.client.render.chunk.RenderChunkAccessor;
 
 @Mixin(BlockAndTintGetter.class)
 public interface MixinBlockAndTintGetter {

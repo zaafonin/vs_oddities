@@ -1,10 +1,8 @@
 package io.github.zaafonin.vs_oddities.ship;
 
-import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
 import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 

@@ -2,18 +2,14 @@ package io.github.zaafonin.vs_oddities.ship;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
-import org.valkyrienskies.core.api.ships.ServerShip;
 import org.valkyrienskies.core.api.ships.ShipForcesInducer;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @JsonAutoDetect(
         fieldVisibility = JsonAutoDetect.Visibility.ANY,

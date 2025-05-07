@@ -1,7 +1,6 @@
 package io.github.zaafonin.vs_oddities.mixin.echochest;
 
 import io.github.zaafonin.vs_oddities.util.ShipBlockPositionSource;
-import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.world.level.gameevent.PositionSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

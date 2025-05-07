@@ -1,6 +1,5 @@
 package io.github.zaafonin.vs_oddities.ship;
 
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
 
 import java.util.List;
