@@ -11,10 +11,10 @@ The addon is still in its early development and has several known and most proba
 ## Features:
 - Various bug fixes:
 - - Newly created ships retain the biome they were created in. No more mismatch of grass colors!
-- - World weather applies to ships correctly. Snow's falling around? It will pile up on your ship as well.
+- - ~~World weather applies to ships correctly. Snow's falling around? It will pile up on your ship as well.~~ Implemented in VS2 now.
 - - Lighting on ships accounts for lights in the world around them. Ships parked in dark areas will be dark as well.
-- - Vanilla sculk now works both in world and on ships. This also applies to [Echo Chest](https://github.com/Fuzss/echochest), helping you to collect items around you while being on a ship.
-- - Better handling of entities tied to ships (minecarts, leashes, etc.)
+- - ~~Vanilla sculk now works both in world and on ships. This also applies to [Echo Chest](https://github.com/Fuzss/echochest), helping you to collect items around you while being on a ship.~~ Merged into VS2.
+- - ~~Better handling of entities tied to ships (minecarts, leashes, etc.)~~ Merged into VS2, aside from minecarts snapping to ship rails.
 - - Sensible default masses for blocks without a defined weight; no more 1000 kg slabs, panes and trapdoors.
 - More integration with [Create](https://github.com/Creators-of-Create/Create):
 - - Blaze burners, basins, mixers interact with each other even on different ships.
@@ -26,7 +26,7 @@ The addon is still in its early development and has several known and most proba
 - - Ships can be dragged around by mobs leashed to them.
 - - Some blocks have a mysterious property of negating gravity. Build floating islands without worrying about thrust!
 - Quality of life for other VS2 tinkerers:
-- - Info about VS2 ships (mass, velocity, attachments, etc.) all in the F3 menu.
+- - ~~Info about VS2 ships (mass, velocity, attachments, etc.) all in the F3 menu.~~ Now mostly in base VS2. Attachment display might be reworked
 - - Two new commands:
 - - - `/vs break` destroys all blocks of a ship as if they were broken naturally (enabling drops)
 - - - `/vs dry` removes all water of a ship, including kelp and seagrass. Waterlogged blocks are also handled correctly.
